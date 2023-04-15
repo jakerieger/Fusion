@@ -101,10 +101,10 @@ int run_repl(VM* vm, char* input) {
 
     generate_instructions(ast, program);
     // We attach the halt instruction to the end of our program to ensure it terminates
-    emit_instruction(program, OP_HALT, NULL, OP_TYPE_NULL, ST_NULL);
+    emit_instruction(program, OP_HALT, NULL, OP_TYPE_NULL);
 
     /*******************************************************************************
-     * We pass our instruction set and VM instance to be executed
+     * We pass our VM instance and instruction set to be executed
      ******************************************************************************/
     run_program(vm, program);
 

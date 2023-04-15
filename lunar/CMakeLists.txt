@@ -25,6 +25,7 @@ add_executable(lunar
     include/stack.h
     include/std.h
     include/token_stream.h
+    include/types.h
     include/vm.h
     include/vmconfig.h
     src/ast.c

@@ -19,7 +19,7 @@ unsigned long hash(char* str) {
     return hash % MAP_SIZE;
 }
 
-Node* create_node(char* key, void* value, char type) {
+Node* create_node(char* key, void* value, NodeValueType value_type) {
     Node* node = (Node*) malloc(sizeof(Node));
     if (node == NULL) {
         print_error("Failed to initialize memory for hash map node\n");
@@ -27,15 +27,19 @@ Node* create_node(char* key, void* value, char type) {
     }
     node->key = strdup(key);
 
-    if (type == 0) {
-        node->value_type = NVT_NUMBER;
-        node->value_number = *(double*) value;
-    } else if (type == 1) {
-        node->value_type = NVT_STRING;
-        node->value_str = (char*) value;
-    } else {
-        // Unsupported type
-        return NULL;
+    switch (value_type) {
+        case NVT_BOOLEAN:
+            node->value_type = NVT_BOOLEAN;
+            node->as.boolean_value = *((Boolean*) value);
+            break;
+        case NVT_NUMBER:
+            node->value_type = NVT_NUMBER;
+            node->as.number_value = *((Number*) value);
+            break;
+        case NVT_STRING:
+            node->value_type = NVT_STRING;
+            node->as.string_value = (String) value;
+            break;
     }
 
     node->next = NULL;
@@ -46,9 +50,9 @@ void init_hash_map(HashMap* map) {
     for (int i = 0; i < MAP_SIZE; i++) { map->map[i] = NULL; }
 }
 
-void insert(HashMap* map, char* key, void* value, char type) {
+void insert(HashMap* map, char* key, void* value, NodeValueType value_type) {
     unsigned long index = hash(key);
-    Node* node = create_node(key, value, type);
+    Node* node = create_node(key, value, value_type);
     node->next = map->map[index];
     map->map[index] = node;
 }

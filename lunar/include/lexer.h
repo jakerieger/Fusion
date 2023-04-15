@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 typedef enum {
-    TOKEN_INTEGER,
+    TOKEN_NUMBER,
     TOKEN_PLUS,
     TOKEN_MINUS,
     TOKEN_MULTIPLY,
@@ -21,6 +21,7 @@ typedef enum {
     TOKEN_IDENTIFIER,
     TOKEN_STRING,
     TOKEN_EQUALS,
+    TOKEN_BOOLEAN,
     TOKEN_EOF
 } TokenType;
 
@@ -49,8 +50,6 @@ bool match(char expected);
 void skip_whitespace();
 
 Token make_token(TokenType type, void* val);
-
-Token make_token_with_length(TokenType type, int length);
 
 Token error_token(const char* message);
 

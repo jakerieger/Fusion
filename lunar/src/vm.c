@@ -5,6 +5,7 @@
 #include "vm.h"
 #include "io.h"
 #include "repl.h"
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -94,44 +95,55 @@ int run_program(VM* vm, InstructionStream* stream) {
 
         switch (instruction.opcode) {
             case OP_PUSH:
-                if (instruction.operand_type == OP_TYPE_NUMBER) {
-                    push(vm->stack, &instruction.operand.number, 0);
-                } else if (instruction.operand_type == OP_TYPE_STR) {
-                    push(vm->stack, instruction.operand.symbol, 1);
+                switch (instruction.operand_type) {
+                    case OP_TYPE_STRING:
+                        push(vm->stack, instruction.operand.string_value, FT_STRING);
+                        break;
+                    case OP_TYPE_NUMBER:
+                        push(vm->stack, &instruction.operand.number_value, FT_NUMBER);
+                        break;
+                    case OP_TYPE_BOOLEAN:
+                        push(vm->stack, &instruction.operand.boolean_value, FT_BOOLEAN);
+                        break;
+                    case OP_TYPE_SYMBOL:
+                        push(vm->stack, instruction.operand.symbol, FT_STRING);
+                        break;
+                    case OP_TYPE_NULL:
+                        break;
                 }
                 break;
             case OP_POP:
-                pop(vm->stack, 0);
+                pop(vm->stack, NULL);
                 break;
             case OP_ADD: {
-                double right = *(double*) pop(vm->stack, 0);
-                double left = *(double*) pop(vm->stack, 0);
-                double value = left + right;
-                push(vm->stack, &value, 0);
+                Number right = *(Number*) pop(vm->stack, NULL);
+                Number left = *(Number*) pop(vm->stack, NULL);
+                Number value = left + right;
+                push(vm->stack, &value, FT_NUMBER);
             } break;
             case OP_SUBTRACT: {
-                double right = *(double*) pop(vm->stack, 0);
-                double left = *(double*) pop(vm->stack, 0);
-                double value = left - right;
-                push(vm->stack, &value, 0);
+                Number right = *(Number*) pop(vm->stack, NULL);
+                Number left = *(Number*) pop(vm->stack, NULL);
+                Number value = left - right;
+                push(vm->stack, &value, FT_NUMBER);
             } break;
             case OP_MULTIPLY: {
-                double right = *(double*) pop(vm->stack, 0);
-                double left = *(double*) pop(vm->stack, 0);
-                double value = left * right;
-                push(vm->stack, &value, 0);
+                Number right = *(Number*) pop(vm->stack, NULL);
+                Number left = *(Number*) pop(vm->stack, NULL);
+                Number value = left * right;
+                push(vm->stack, &value, FT_NUMBER);
             } break;
             case OP_DIVIDE: {
-                double right = *(double*) pop(vm->stack, 0);
-                double left = *(double*) pop(vm->stack, 0);
-                double value = left / right;
-                push(vm->stack, &value, 0);
+                Number right = *(Number*) pop(vm->stack, NULL);
+                Number left = *(Number*) pop(vm->stack, NULL);
+                Number value = left / right;
+                push(vm->stack, &value, FT_NUMBER);
             } break;
             case OP_MODULUS: {
-                double right = *(double*) pop(vm->stack, 0);
-                double left = *(double*) pop(vm->stack, 0);
-                double value = left / right;
-                push(vm->stack, &value, 0);
+                Number right = *(Number*) pop(vm->stack, NULL);
+                Number left = *(Number*) pop(vm->stack, NULL);
+                Number value = fmod(left, right);
+                push(vm->stack, &value, FT_NUMBER);
             } break;
             case OP_LOAD: {
                 char* symbol_name = instruction.operand.symbol;
@@ -141,33 +153,63 @@ int run_program(VM* vm, InstructionStream* stream) {
                     break;
                 }
 
-                if (value->value_type == NVT_NUMBER) {
-                    push(vm->stack, &value->value_number, 0);
-                    printf("%s: %f\n", symbol_name, value->value_number);
-                } else {
-                    push(vm->stack, &value->value_str, 1);
-                    printf("%s: %s\n", symbol_name, value->value_str);
+                switch (value->value_type) {
+                    case NVT_NUMBER:
+                        push(vm->stack, &value->as.number_value, FT_NUMBER);
+                        printf("%s: %f\n", symbol_name, value->as.number_value);
+                        break;
+                    case NVT_STRING:
+                        push(vm->stack, &value->as.string_value, FT_STRING);
+                        printf("%s: %s\n", symbol_name, value->as.string_value);
+                        break;
+                    case NVT_BOOLEAN:
+                        push(vm->stack, &value->as.boolean_value, FT_BOOLEAN);
+                        printf("%s: %s\n", symbol_name,
+                               value->as.boolean_value.value == BOOL_TRUE ? "true" : "false");
+                        break;
                 }
             } break;
             case OP_STORE: {
                 char* symbol_name = instruction.operand.symbol;
-                if (instruction.store_type == ST_STR) {
-                    char* value = (char*) pop(vm->stack, 1);
-                    insert(vm->symbol_table, symbol_name, value, 1);
-                } else if (instruction.store_type == ST_NUMBER) {
-                    double value = *(double*) pop(vm->stack, 0);
-                    insert(vm->symbol_table, symbol_name, &value, 0);
-                } else {
-                    print_error("Attempted to store reference of unknown type.\n");
-                    return -1;
+
+                // We already know the type from the element on the stack.
+                // If we adjust the pop method to push a type out to a
+                // variable we provide, we can handle casting without
+                // needing to pass a StoreType enum to this OpCode.
+                FrameType* type = malloc(sizeof(FrameType));
+                void* value = pop(vm->stack, type);
+
+                if (type == NULL) {
+                    print_error("FrameType pointer value NULL\n");
+                    break;
                 }
+
+                switch (*type) {
+                    case FT_STRING: {
+                        String typed_value = (String) value;
+                        insert(vm->symbol_table, symbol_name, &typed_value, NVT_STRING);
+                    } break;
+                    case FT_NUMBER: {
+                        Number typed_value = *(Number*) value;
+                        insert(vm->symbol_table, symbol_name, &typed_value, NVT_NUMBER);
+                    } break;
+                    case FT_BOOLEAN: {
+                        Boolean typed_value = *(Boolean*) value;
+                        insert(vm->symbol_table, symbol_name, &typed_value, NVT_BOOLEAN);
+                    } break;
+                    default:
+                        print_error("Attempted to store a null reference.\n");
+                        return -1;
+                }
+
+                free(type);
             } break;
                 //            case OP_HEAP_ALLOC:
                 //                break;
                 //            case OP_HEAP_FREE:
                 //                break;
-                //            case OP_NOOP:
-                //                break;
+            case OP_NOOP:
+                continue;
                 //            case OP_HALT:
                 //                break;
             default:
@@ -176,10 +218,10 @@ int run_program(VM* vm, InstructionStream* stream) {
     }
 
     clock_t end = clock();
-    double runtime = (double) (end - begin) / CLOCKS_PER_SEC * 1000;
-    //    printf("Output (double) => ");
-    //    double output_double = *(double*) pop(vm->stack, 0);
-    //    printf("%s%f%s\n", BOLD_CYAN_COLOR, output_double, RESET_COLOR);
+    Number runtime = (Number) (end - begin) / CLOCKS_PER_SEC * 1000;
+    //    printf("Output (Number) => ");
+    //    Number output_Number = *(Number*) pop(vm->stack, 0);
+    //    printf("%s%f%s\n", BOLD_CYAN_COLOR, output_Number, RESET_COLOR);
     printf("%s(took: %.3fms)%s\n", YELLOW_COLOR, runtime, RESET_COLOR);
 
     if (vm->config->emit_instruction_set == 1) {

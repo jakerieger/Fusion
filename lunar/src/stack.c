@@ -22,20 +22,24 @@ Stack* create_stack(int size) {
     return stack;
 }
 
-void push(Stack* stack, void* value, char type) {
+void push(Stack* stack, void* value, FrameType type) {
     if (stack->count < stack->max_size) {
-        if (type == 0) {
-            stack->entries[stack->count].type = type;
-            stack->entries[stack->count].value.d_val = *((double*) value);
-            stack->count++;
-        } else if (type == 1) {
-            stack->entries[stack->count].type = type;
-            stack->entries[stack->count].value.s_val = (char*) value;
-            stack->count++;
-        } else {
-            // Error: Unsupported value type (double or char* only)
-            print_error("Tried pushing value with unsupported size to stack\n");
-            return;
+        switch (type) {
+            case FT_BOOLEAN:
+                stack->entries[stack->count].type = type;
+                stack->entries[stack->count].value.boolean_value = *((Boolean*) value);
+                stack->count++;
+                break;
+            case FT_NUMBER:
+                stack->entries[stack->count].type = type;
+                stack->entries[stack->count].value.number_value = *((Number*) value);
+                stack->count++;
+                break;
+            case FT_STRING:
+                stack->entries[stack->count].type = type;
+                stack->entries[stack->count].value.string_value = (String) value;
+                stack->count++;
+                break;
         }
     } else {
         // Error: Stack Overflow
@@ -44,18 +48,23 @@ void push(Stack* stack, void* value, char type) {
     }
 }
 
-void* pop(Stack* stack, char type) {
+void* pop(Stack* stack, FrameType* type) {
     if (stack->count > 0) {
-        //        if (stack->count == 0) {
-        //            // Reset the stack to avoid memory leaks
-        //            memset(stack->entries, 0, sizeof(StackEntry) * stack->max_size);
-        //        }
-        if (type == 0) {
-            return &stack->entries[--stack->count].value.d_val;
-        } else if (type == 1) {
-            return stack->entries[--stack->count].value.s_val;
-        } else {
-            return NULL;
+        stack->count--;
+        switch (stack->entries[stack->count].type) {
+            case FT_BOOLEAN:
+                if (type != NULL) { *type = stack->entries[stack->count].type; }
+                *type = stack->entries[stack->count].type;
+                return &stack->entries[stack->count].value.boolean_value;
+            case FT_NUMBER:
+                if (type != NULL) { *type = stack->entries[stack->count].type; }
+                return &stack->entries[stack->count].value.number_value;
+            case FT_STRING:
+                if (type != NULL) { *type = stack->entries[stack->count].type; }
+                return stack->entries[stack->count].value.string_value;
+            case FT_NULL:
+                print_error("Tried to push null reference to stack\n");
+                exit(1);
         }
     } else {
         // Error: Stack underflow

@@ -4,6 +4,7 @@
 
 #include "lexer.h"
 #include "repl.h"
+#include "types.h"
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
@@ -46,15 +47,6 @@ Token make_token(TokenType type, void* val) {
     return token;
 }
 
-Token make_token_with_length(TokenType type, int length) {
-    Token token;
-    token.type = type;
-    token.start = current;
-    token.length = length;
-    token.line = line;
-    return token;
-}
-
 Token error_token(const char* message) {
     Token token;
     token.type = TOKEN_EOF;
@@ -88,7 +80,7 @@ Token number() {
 
     double* i = malloc(sizeof(double));
     *i = floor(atoi(number_value));
-    return make_token(TOKEN_INTEGER, i);
+    return make_token(TOKEN_NUMBER, i);
 }
 
 Token identifier() {
@@ -105,6 +97,18 @@ Token identifier() {
 
     strncpy(identifier_name, buf, len);
     identifier_name[len] = '\0';
+
+    if (strcmp(identifier_name, "true") == 0) {
+        Boolean* value = malloc(sizeof(Boolean));
+        value->value = BOOL_TRUE;
+        return make_token(TOKEN_BOOLEAN, value);
+    }
+
+    if (strcmp(identifier_name, "false") == 0) {
+        Boolean* value = malloc(sizeof(Boolean));
+        value->value = BOOL_FALSE;
+        return make_token(TOKEN_BOOLEAN, value);
+    }
 
     return make_token(TOKEN_IDENTIFIER, identifier_name);
 }

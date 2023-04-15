@@ -34,26 +34,22 @@ typedef enum {
 } OpCode;
 
 typedef enum {
-    OP_TYPE_STR,
+    OP_TYPE_STRING,
     OP_TYPE_NUMBER,
+    OP_TYPE_BOOLEAN,
     OP_TYPE_SYMBOL,
     OP_TYPE_NULL,
 } OperandType;
 
-typedef enum {
-    ST_STR,
-    ST_NUMBER,
-    ST_NULL,
-} StoreType;
-
 typedef struct {
     OpCode opcode;
     union {
-        double number;
+        Number number_value;
+        String string_value;
+        Boolean boolean_value;
         char* symbol;
     } operand;
     OperandType operand_type;
-    StoreType store_type;
 } Instruction;
 
 typedef struct InstructionStream {
@@ -63,6 +59,6 @@ typedef struct InstructionStream {
 
 void generate_instructions(ExprNode* ast_root, InstructionStream* stream);
 void emit_instruction(InstructionStream* stream, OpCode opcode, void* operand,
-                      OperandType operand_type, StoreType store_type);
+                      OperandType operand_type);
 
 #endif

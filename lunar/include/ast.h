@@ -6,6 +6,7 @@
 #define LUNA_AST_H
 
 #include "token_stream.h"
+#include "types.h"
 
 /**
  * @brief The base AST node used to represent an expression.
@@ -18,10 +19,11 @@ typedef struct ExprNode {
         EXPR_DIVIDE,
         EXPR_MODULUS,
         EXPR_NUMBER,
-        EXPR_STR,
+        EXPR_STRING,
         EXPR_REFERENCE,
         EXPR_ASSIGN,
         EXPR_FUNC_CALL,
+        EXPR_BOOLEAN,
     } type;
     union {
         struct BinaryOpNode* binary_op_node;
@@ -30,6 +32,7 @@ typedef struct ExprNode {
         struct ReferenceNode* reference_node;
         struct AssignmentOpNode* assign_op_node;
         struct FunctionCallNode* function_call_node;
+        struct BooleanNode* boolean_node;
     } as;
 } ExprNode;
 
@@ -77,6 +80,10 @@ typedef struct FunctionCallNode {
     int argc;
     ExprNode* args;
 } FunctionCallNode;
+
+typedef struct BooleanNode {
+    Boolean value;
+} BooleanNode;
 
 /**
  * @brief Parses a stream of tokens in to an AST tree and returns the root node
@@ -133,5 +140,12 @@ ExprNode* parse_number_expr(TokenStream* tokens);
  * @return Pointer to parsed ExprNode
  */
 ExprNode* parse_str_expr(TokenStream* tokens);
+
+/**
+ * @brief Parses a stream of tokens in to a boolean value expression
+ * @param tokens
+ * @return Pointer to parsed ExprNode
+ */
+ExprNode* parse_bool_expr(TokenStream* tokens);
 
 #endif
