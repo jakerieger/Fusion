@@ -1,0 +1,250 @@
+\hypertarget{lexer_8c}{}\doxysection{/home/jr/\+Code/\+Git\+Hub/\+Luna/src/lexer.c File Reference}
+\label{lexer_8c}\index{/home/jr/Code/GitHub/Luna/src/lexer.c@{/home/jr/Code/GitHub/Luna/src/lexer.c}}
+{\ttfamily \#include \char`\"{}lexer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}repl.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+Include dependency graph for lexer.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{lexer_8c_a58ce36916c399104e18d32ff090f21c6}{MAX\+\_\+\+STR\+\_\+\+LEN}}~64
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{lexer_8c_a8903a4e9f3d5fb42d0faa9d53e21d85c}{advance}} ()
+\item 
+bool \mbox{\hyperlink{lexer_8c_af87b6af9a708cf1bcadd7cb9b28551a2}{is\+\_\+at\+\_\+end}} ()
+\item 
+char \mbox{\hyperlink{lexer_8c_a6666e8a777286e9ccb65eb515b949670}{peek}} ()
+\item 
+char \mbox{\hyperlink{lexer_8c_ab359bbdbb4f89653218270eaeffc754f}{peek\+\_\+next}} ()
+\item 
+bool \mbox{\hyperlink{lexer_8c_aecd65efad3262ae07826eae754079ad3}{match}} (char expected)
+\item 
+void \mbox{\hyperlink{lexer_8c_ad286fa18439fbed14dec41adc407e71b}{skip\+\_\+whitespace}} ()
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_a84b5fe84aaaa5515db5d4b73631f129e}{make\+\_\+token}} (\mbox{\hyperlink{lexer_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} type, const char $\ast$val)
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_a795618772a43b098839cb17229c89523}{make\+\_\+token\+\_\+with\+\_\+length}} (\mbox{\hyperlink{lexer_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} type, int length)
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_a6ab6946e323432902f8050717df06f71}{error\+\_\+token}} (const char $\ast$message)
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_a70704cec2f98d859ce3ec909ce885cca}{number}} ()
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_aeeb225aac175e99f0cb4c0c487aeaedf}{identifier}} ()
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lexer_8c_a7f56ee39cc61e9a3bcde79e210b423d0}{scan\+\_\+token}} ()
+\item 
+void \mbox{\hyperlink{lexer_8c_a8b79cfb7042288568abcf4a02d24d81a}{init\+\_\+scanner}} (const char $\ast$src)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{lexer_8c_a58ce36916c399104e18d32ff090f21c6}\label{lexer_8c_a58ce36916c399104e18d32ff090f21c6}} 
+\index{lexer.c@{lexer.c}!MAX\_STR\_LEN@{MAX\_STR\_LEN}}
+\index{MAX\_STR\_LEN@{MAX\_STR\_LEN}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_STR\_LEN}{MAX\_STR\_LEN}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+STR\+\_\+\+LEN~64}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{lexer_8c_a8903a4e9f3d5fb42d0faa9d53e21d85c}\label{lexer_8c_a8903a4e9f3d5fb42d0faa9d53e21d85c}} 
+\index{lexer.c@{lexer.c}!advance@{advance}}
+\index{advance@{advance}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{advance()}{advance()}}
+{\footnotesize\ttfamily void advance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_a8903a4e9f3d5fb42d0faa9d53e21d85c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a6ab6946e323432902f8050717df06f71}\label{lexer_8c_a6ab6946e323432902f8050717df06f71}} 
+\index{lexer.c@{lexer.c}!error\_token@{error\_token}}
+\index{error\_token@{error\_token}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{error\_token()}{error\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} error\+\_\+token (\begin{DoxyParamCaption}\item[{const char $\ast$}]{message }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{lexer_8c_a6ab6946e323432902f8050717df06f71_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_aeeb225aac175e99f0cb4c0c487aeaedf}\label{lexer_8c_aeeb225aac175e99f0cb4c0c487aeaedf}} 
+\index{lexer.c@{lexer.c}!identifier@{identifier}}
+\index{identifier@{identifier}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{identifier()}{identifier()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} identifier (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{lexer_8c_aeeb225aac175e99f0cb4c0c487aeaedf_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=324pt]{lexer_8c_aeeb225aac175e99f0cb4c0c487aeaedf_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a8b79cfb7042288568abcf4a02d24d81a}\label{lexer_8c_a8b79cfb7042288568abcf4a02d24d81a}} 
+\index{lexer.c@{lexer.c}!init\_scanner@{init\_scanner}}
+\index{init\_scanner@{init\_scanner}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{init\_scanner()}{init\_scanner()}}
+{\footnotesize\ttfamily void init\+\_\+scanner (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=233pt]{lexer_8c_a8b79cfb7042288568abcf4a02d24d81a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_af87b6af9a708cf1bcadd7cb9b28551a2}\label{lexer_8c_af87b6af9a708cf1bcadd7cb9b28551a2}} 
+\index{lexer.c@{lexer.c}!is\_at\_end@{is\_at\_end}}
+\index{is\_at\_end@{is\_at\_end}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{is\_at\_end()}{is\_at\_end()}}
+{\footnotesize\ttfamily bool is\+\_\+at\+\_\+end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_af87b6af9a708cf1bcadd7cb9b28551a2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a84b5fe84aaaa5515db5d4b73631f129e}\label{lexer_8c_a84b5fe84aaaa5515db5d4b73631f129e}} 
+\index{lexer.c@{lexer.c}!make\_token@{make\_token}}
+\index{make\_token@{make\_token}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{make\_token()}{make\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} make\+\_\+token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lexer_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}}}]{type,  }\item[{const char $\ast$}]{val }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_a84b5fe84aaaa5515db5d4b73631f129e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a795618772a43b098839cb17229c89523}\label{lexer_8c_a795618772a43b098839cb17229c89523}} 
+\index{lexer.c@{lexer.c}!make\_token\_with\_length@{make\_token\_with\_length}}
+\index{make\_token\_with\_length@{make\_token\_with\_length}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{make\_token\_with\_length()}{make\_token\_with\_length()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} make\+\_\+token\+\_\+with\+\_\+length (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lexer_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}}}]{type,  }\item[{int}]{length }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{lexer_8c_aecd65efad3262ae07826eae754079ad3}\label{lexer_8c_aecd65efad3262ae07826eae754079ad3}} 
+\index{lexer.c@{lexer.c}!match@{match}}
+\index{match@{match}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{match()}{match()}}
+{\footnotesize\ttfamily bool match (\begin{DoxyParamCaption}\item[{char}]{expected }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{lexer_8c_aecd65efad3262ae07826eae754079ad3_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a70704cec2f98d859ce3ec909ce885cca}\label{lexer_8c_a70704cec2f98d859ce3ec909ce885cca}} 
+\index{lexer.c@{lexer.c}!number@{number}}
+\index{number@{number}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{number()}{number()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} number (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{lexer_8c_a70704cec2f98d859ce3ec909ce885cca_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{lexer_8c_a70704cec2f98d859ce3ec909ce885cca_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a6666e8a777286e9ccb65eb515b949670}\label{lexer_8c_a6666e8a777286e9ccb65eb515b949670}} 
+\index{lexer.c@{lexer.c}!peek@{peek}}
+\index{peek@{peek}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{peek()}{peek()}}
+{\footnotesize\ttfamily char peek (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_a6666e8a777286e9ccb65eb515b949670_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_ab359bbdbb4f89653218270eaeffc754f}\label{lexer_8c_ab359bbdbb4f89653218270eaeffc754f}} 
+\index{lexer.c@{lexer.c}!peek\_next@{peek\_next}}
+\index{peek\_next@{peek\_next}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{peek\_next()}{peek\_next()}}
+{\footnotesize\ttfamily char peek\+\_\+next (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=247pt]{lexer_8c_ab359bbdbb4f89653218270eaeffc754f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_ab359bbdbb4f89653218270eaeffc754f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_a7f56ee39cc61e9a3bcde79e210b423d0}\label{lexer_8c_a7f56ee39cc61e9a3bcde79e210b423d0}} 
+\index{lexer.c@{lexer.c}!scan\_token@{scan\_token}}
+\index{scan\_token@{scan\_token}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{scan\_token()}{scan\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} scan\+\_\+token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_a7f56ee39cc61e9a3bcde79e210b423d0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=228pt]{lexer_8c_a7f56ee39cc61e9a3bcde79e210b423d0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{lexer_8c_ad286fa18439fbed14dec41adc407e71b}\label{lexer_8c_ad286fa18439fbed14dec41adc407e71b}} 
+\index{lexer.c@{lexer.c}!skip\_whitespace@{skip\_whitespace}}
+\index{skip\_whitespace@{skip\_whitespace}!lexer.c@{lexer.c}}
+\doxysubsubsection{\texorpdfstring{skip\_whitespace()}{skip\_whitespace()}}
+{\footnotesize\ttfamily void skip\+\_\+whitespace (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{lexer_8c_ad286fa18439fbed14dec41adc407e71b_icgraph}
+\end{center}
+\end{figure}

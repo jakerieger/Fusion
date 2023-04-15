@@ -1,0 +1,8 @@
+<map id="initialize_vm" name="initialize_vm">
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,112,105"/>
+<area shape="rect" id="node2" href="$heap_8c.html#aad981cd72f083aa8b70123ecc588f5a5" title=" " alt="" coords="163,5,281,31"/>
+<area shape="rect" id="node3" href="$stack_8c.html#a0f972a37419645c58824bc07e18030da" title=" " alt="" coords="162,55,282,80"/>
+<area shape="rect" id="node4" href="$repl_8c.html#a7bac5124c7c553f58e3b1c4ba73a91c7" title=" " alt="" coords="353,80,443,105"/>
+<area shape="rect" id="node5" href="$vmconfig_8c.html#a906d2f5d05a7c841e74da0e0f60cbcb0" title=" " alt="" coords="160,156,284,181"/>
+<area shape="rect" id="node6" href="$vmconfig_8c.html#a76059af4bda971db7a176cd3e81599dd" title=" " alt="" coords="332,156,464,181"/>
+</map>

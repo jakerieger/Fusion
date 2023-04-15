@@ -1,0 +1,28 @@
+\hypertarget{heap_8h_source}{}\doxysection{heap.\+h}
+\label{heap_8h_source}\index{/home/jr/Code/GitHub/Luna/include/heap.h@{/home/jr/Code/GitHub/Luna/include/heap.h}}
+\mbox{\hyperlink{heap_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ Copyright\ (c)\ 2023\ Gymate,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ Licensed\ under\ the\ GNU\ General\ Public\ License\ v3.0}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ HEAP\_H}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ HEAP\_H}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structHeap_a854352f53b148adc24983a58a1866d66}{size}};}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structHeap_a01bf3b4b2b69830355cc62c1fffb1076}{entry\_ptr}};}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{structHeap_a65bf842c2ec02e81588f8a730ea0e897}{end\_ptr}};}
+\DoxyCodeLine{00016\ \}\ \mbox{\hyperlink{structHeap}{Heap}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \mbox{\hyperlink{structHeap}{Heap}}*\ \mbox{\hyperlink{heap_8h_aad981cd72f083aa8b70123ecc588f5a5}{initialize\_heap}}(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00019\ \mbox{\hyperlink{structHeap}{Heap}}*\ \mbox{\hyperlink{heap_8h_acc474f67504cd58e0a35aace168f83fc}{resize\_heap}}(\mbox{\hyperlink{structHeap}{Heap}}*\ current,\ \textcolor{keywordtype}{size\_t}\ new\_size);}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{heap_8h_afbb4ec7ceaec5f842dd246c36cc7550f}{cleanup\_heap}}(\mbox{\hyperlink{structHeap}{Heap}}*\ heap);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,38 @@
+\hypertarget{vm_8h_source}{}\doxysection{vm.\+h}
+\label{vm_8h_source}\index{/home/jr/Code/GitHub/Luna/include/vm.h@{/home/jr/Code/GitHub/Luna/include/vm.h}}
+\mbox{\hyperlink{vm_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ Copyright\ (c)\ 2023\ Gymate,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ Licensed\ under\ the\ GNU\ General\ Public\ License\ v3.0}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ VM\_H}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ VM\_H}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{heap_8h}{heap.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{instruction_8h}{instruction.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{lexer_8h}{lexer.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{stack_8h}{stack.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{vmconfig_8h}{vmconfig.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{structVMConfig}{VMConfig}}*\ \mbox{\hyperlink{structVM_a7cb3a19431f2cb285941c09997108775}{config}};}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{structHeap}{Heap}}*\ \mbox{\hyperlink{structVM_ac855d55fdc15543a7425831379af753c}{heap}};}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{structStack}{Stack}}*\ \mbox{\hyperlink{structVM_a4efbb5409daaa6e7ee513423ef977ee4}{stack}};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVM_a95250eaffc10b13f463617cc4d5a4b51}{stack\_ptr}};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVM_aa6c85eb756030909cee213a53d3e4093}{heap\_ptr}};}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVM_ac0c4cd74430f11256ce48b4fd306f2f7}{instr\_ptr}};}
+\DoxyCodeLine{00024\ \}\ \mbox{\hyperlink{structVM}{VM}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \mbox{\hyperlink{structVM}{VM}}*\ \mbox{\hyperlink{vm_8h_ac10742bf1dc0763baea304f6a37f26d5}{initialize\_vm}}();}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vm_8h_ad13da48140f5c26fd91e61e4b8f2b521}{configure\_vm}}(\mbox{\hyperlink{structVM}{VM}}*\ vm);}
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vm_8h_abdf2f7ef375b1e8975a11a1be3c73b43}{reset\_vm}}(\mbox{\hyperlink{structVM}{VM}}*\ vm);}
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vm_8h_a82fd6e45df86e3ca9bca45a7a71f43e3}{shutdown\_vm}}(\mbox{\hyperlink{structVM}{VM}}*\ vm);}
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vm_8h_a4b00729b1cb275b791a64016eb0d8961}{run\_program}}(\mbox{\hyperlink{structVM}{VM}}*\ vm,\ \mbox{\hyperlink{structInstructionStream}{InstructionStream}}*\ stream);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,72 @@
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md18}{}\doxysection{Install from source}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md18}
+The Luna interpreter and repl are written in C so you\textquotesingle{}ll need to setup a development environment for C if you don\textquotesingle{}t already have one.\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md19}{}\doxysubsection{Prerequisites}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md19}
+
+\begin{DoxyItemize}
+\item A C99 supported compiler.
+\item CMake \texorpdfstring{$>$}{>}= 3.\+22.\+1
+\item {\ttfamily git} command line
+\end{DoxyItemize}\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md20}{}\doxysubsection{1. Clone the repository}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md20}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ git\ clone\ https://github.com/GymateSoftware/Luna}
+\DoxyCodeLine{\$\ cd\ ./Luna}
+
+\end{DoxyCode}
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md21}{}\doxysubsection{2. Configure and run CMake}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md21}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ mkdir\ build}
+\DoxyCodeLine{\$\ cd\ build}
+\DoxyCodeLine{\$\ cmake\ ..}
+
+\end{DoxyCode}
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md22}{}\doxysubsection{3. Build}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md22}
+Still in the build folder, run the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ make}
+
+\end{DoxyCode}
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md23}{}\doxysection{Install from releases}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md23}
+You can install the Luna toolchain directly by downloading and executing the following script\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ wget\ https://github.com/GymateSoftware/Luna/releases/latest/install.sh\ |\ sh\ install.sh}
+
+\end{DoxyCode}
+
+
+\begin{quote}
+Note\+: This method is {\bfseries{not}} functional at the moment, please install from source above. \end{quote}
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md24}{}\doxysection{Run the Luna REPL (\+Luna\+R)}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md24}
+Run the Luna REPL by executing the {\ttfamily lunar} command.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ luna}
+\DoxyCodeLine{┏─────────────────────┓}
+\DoxyCodeLine{│\ \ \ \ \ ░L░u░n░a░R░\ \ \ \ \ │}
+\DoxyCodeLine{│\ \ \ \ The\ Luna\ Repl\ \ \ \ │}
+\DoxyCodeLine{┗─────────────────────┛}
+\DoxyCodeLine{}
+\DoxyCodeLine{Version\ \ :\ 0.0.1\ (dev)}
+\DoxyCodeLine{Platform\ :\ linux\_unknown}
+\DoxyCodeLine{}
+\DoxyCodeLine{[!]\ Type\ 'info'\ for\ configuration\ info\ or\ 'exit'\ to\ quit.}
+\DoxyCodeLine{}
+\DoxyCodeLine{›››}
+
+\end{DoxyCode}
+
+
+You can also pass a script file to the {\ttfamily lunar} command to execute that script file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ lunar\ <script>}
+
+\end{DoxyCode}
+\hypertarget{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md25}{}\doxysection{Next steps}\label{md__home_jr_Code_GitHub_Luna_QUICKSTART_autotoc_md25}
+Head on over to \mbox{\hyperlink{md__home_jr_Code_GitHub_Luna_EXAMPLES}{Examples}} to see Luna in action or our \href{https://opensource.gymate.io/Luna}{\texttt{ Official Documentation}} to dive deep in inner workings of Luna. 

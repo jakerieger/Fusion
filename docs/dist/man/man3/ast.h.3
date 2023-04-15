@@ -1,0 +1,166 @@
+.TH "/home/jr/Code/GitHub/Luna/include/ast.h" 3 "Tue Apr 11 2023" "Version 0.0.1" "Luna" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/jr/Code/GitHub/Luna/include/ast.h
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'tokenstream\&.h'\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBExprNode\fP"
+.br
+.RI "The base AST node used to represent an expression\&. "
+.ti -1c
+.RI "struct \fBBinaryOpNode\fP"
+.br
+.RI "AST node used to represent a binary operation such as addition or subtraction\&. "
+.ti -1c
+.RI "struct \fBNumberNode\fP"
+.br
+.RI "AST node used to represent a number value\&. "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBExprNode\fP \fBExprNode\fP"
+.br
+.RI "The base AST node used to represent an expression\&. "
+.ti -1c
+.RI "typedef struct \fBBinaryOpNode\fP \fBBinaryOpNode\fP"
+.br
+.RI "AST node used to represent a binary operation such as addition or subtraction\&. "
+.ti -1c
+.RI "typedef struct \fBNumberNode\fP \fBNumberNode\fP"
+.br
+.RI "AST node used to represent a number value\&. "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBExprNode\fP * \fBparse_expr\fP (\fBTokenStream\fP *tokens)"
+.br
+.RI "Parses a stream of tokens in to an AST tree and returns the root node\&. "
+.ti -1c
+.RI "\fBExprNode\fP * \fBparse_add_expr\fP (\fBTokenStream\fP *tokens)"
+.br
+.RI "Parses a stream of tokens in to an \fCADD\fP or \fCSUB\fP expression\&. "
+.ti -1c
+.RI "\fBExprNode\fP * \fBparse_mul_expr\fP (\fBTokenStream\fP *tokens)"
+.br
+.RI "Parses a stream of tokens in to a \fCMUL\fP or \fCDIV\fP expression\&. "
+.ti -1c
+.RI "\fBExprNode\fP * \fBparse_primary_expr\fP (\fBTokenStream\fP *tokens)"
+.br
+.RI "Parses a stream of tokens in to a primary expression tree, such as a function call\&. "
+.ti -1c
+.RI "\fBExprNode\fP * \fBparse_number_expr\fP (\fBTokenStream\fP *tokens)"
+.br
+.RI "Parses a stream of tokens in to a number expression\&. "
+.in -1c
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBBinaryOpNode\fP \fBBinaryOpNode\fP"
+
+.PP
+AST node used to represent a binary operation such as addition or subtraction\&. 
+.SS "typedef struct \fBExprNode\fP \fBExprNode\fP"
+
+.PP
+The base AST node used to represent an expression\&. 
+.SS "typedef struct \fBNumberNode\fP \fBNumberNode\fP"
+
+.PP
+AST node used to represent a number value\&. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBExprNode\fP * parse_add_expr (\fBTokenStream\fP * tokens)"
+
+.PP
+Parses a stream of tokens in to an \fCADD\fP or \fCSUB\fP expression\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItokens\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The pointer to the root \fBExprNode\fP of the AST tree 
+.RE
+.PP
+
+.SS "\fBExprNode\fP * parse_expr (\fBTokenStream\fP * tokens)"
+
+.PP
+Parses a stream of tokens in to an AST tree and returns the root node\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItokens\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The pointer to the root \fBExprNode\fP of the AST tree 
+.RE
+.PP
+
+.SS "\fBExprNode\fP * parse_mul_expr (\fBTokenStream\fP * tokens)"
+
+.PP
+Parses a stream of tokens in to a \fCMUL\fP or \fCDIV\fP expression\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItokens\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The pointer to the root \fBExprNode\fP of the AST tree 
+.RE
+.PP
+
+.SS "\fBExprNode\fP * parse_number_expr (\fBTokenStream\fP * tokens)"
+
+.PP
+Parses a stream of tokens in to a number expression\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItokens\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The pointer to the root \fBExprNode\fP of the AST tree 
+.RE
+.PP
+
+.SS "\fBExprNode\fP * parse_primary_expr (\fBTokenStream\fP * tokens)"
+
+.PP
+Parses a stream of tokens in to a primary expression tree, such as a function call\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItokens\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The pointer to the root \fBExprNode\fP of the AST tree 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Luna from the source code\&.

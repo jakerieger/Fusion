@@ -1,0 +1,31 @@
+\hypertarget{vmconfig_8h_source}{}\doxysection{vmconfig.\+h}
+\label{vmconfig_8h_source}\index{/home/jr/Code/GitHub/Luna/include/vmconfig.h@{/home/jr/Code/GitHub/Luna/include/vmconfig.h}}
+\mbox{\hyperlink{vmconfig_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ Copyright\ (c)\ 2023\ Gymate,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ Licensed\ under\ the\ GNU\ General\ Public\ License\ v3.0}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ VMCONFIG\_H}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ VMCONFIG\_H}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ DEFAULT\_HEAP\_SIZE\ 512000}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ DEFAULT\_STACK\_SIZE\ 128000}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ DEFAULT\_INPUT\_BUFFER\_SIZE\ 256}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ DEFAULT\_STR\_LIT\_MAX\_LEN\ 64}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVMConfig_a58becee4da1c264266e29bfb43a452a4}{heap\_size}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVMConfig_adde5266300e9cdd7ca1134daba9adf24}{stack\_size}};}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVMConfig_aca2556a77649c22795bb6454eba36750}{input\_buffer\_size}};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structVMConfig_a46a7a1344906a59cabfe4390bf6f6fbb}{string\_lit\_max\_len}};}
+\DoxyCodeLine{00020\ \}\ \mbox{\hyperlink{structVMConfig}{VMConfig}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vmconfig_8c_a76059af4bda971db7a176cd3e81599dd}{parse\_vm\_config}}(\textcolor{keywordtype}{void}*\ config,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ section,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ value);}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{vmconfig_8h_a906d2f5d05a7c841e74da0e0f60cbcb0}{load\_vm\_config}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ path,\ \mbox{\hyperlink{structVMConfig}{VMConfig}}*\ vm\_config);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

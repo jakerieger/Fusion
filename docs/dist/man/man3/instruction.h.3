@@ -1,0 +1,87 @@
+.TH "/home/jr/Code/GitHub/Luna/include/instruction.h" 3 "Tue Apr 11 2023" "Version 0.0.1" "Luna" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/home/jr/Code/GitHub/Luna/include/instruction.h
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'ast\&.h'\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBInstruction\fP"
+.br
+.ti -1c
+.RI "struct \fBInstructionStream\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBInstructionStream\fP \fBInstructionStream\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBOpCode\fP { \fBOP_PUSH\fP, \fBOP_POP\fP, \fBOP_ADD\fP, \fBOP_SUBTRACT\fP, \fBOP_MULTIPLY\fP, \fBOP_DIVIDE\fP, \fBOP_MODULUS\fP, \fBOP_HEAP_ALLOC\fP, \fBOP_HEAP_FREE\fP, \fBOP_HALT\fP, \fBOP_NOOP\fP }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBgenerate_instructions\fP (\fBExprNode\fP *ast_root, \fBInstructionStream\fP *stream)"
+.br
+.ti -1c
+.RI "void \fBemit_instruction\fP (\fBInstructionStream\fP *stream, \fBOpCode\fP opcode, double operand)"
+.br
+.in -1c
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBInstructionStream\fP \fBInstructionStream\fP"
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBOpCode\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIOP_PUSH \fP\fP
+.TP
+\fB\fIOP_POP \fP\fP
+.TP
+\fB\fIOP_ADD \fP\fP
+.TP
+\fB\fIOP_SUBTRACT \fP\fP
+.TP
+\fB\fIOP_MULTIPLY \fP\fP
+.TP
+\fB\fIOP_DIVIDE \fP\fP
+.TP
+\fB\fIOP_MODULUS \fP\fP
+.TP
+\fB\fIOP_HEAP_ALLOC \fP\fP
+.TP
+\fB\fIOP_HEAP_FREE \fP\fP
+.TP
+\fB\fIOP_HALT \fP\fP
+.TP
+\fB\fIOP_NOOP \fP\fP
+.SH "Function Documentation"
+.PP 
+.SS "void emit_instruction (\fBInstructionStream\fP * stream, \fBOpCode\fP opcode, double operand)"
+
+.SS "void generate_instructions (\fBExprNode\fP * ast_root, \fBInstructionStream\fP * stream)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Luna from the source code\&.

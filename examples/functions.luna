@@ -1,0 +1,13 @@
+x = 3
+y = 5
+
+impl add(a, b):
+    |> a + b
+
+impl add_then_sqr(a, b):
+    | c = a + b
+    | d = c * c
+    |> d
+
+print(add(x, y))
+print(add_then_sqr(x, y))

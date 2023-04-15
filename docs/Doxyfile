@@ -1,0 +1,27 @@
+# Doxyfile 1.9.6
+
+PROJECT_NAME           = Luna
+PROJECT_NUMBER         = 0.0.1
+PROJECT_BRIEF          = "A scripting language for Systems Administrators"
+OUTPUT_DIRECTORY       = /home/jr/Code/GitHub/Luna/docs/dist
+OPTIMIZE_OUTPUT_FOR_C  = YES
+HIDE_SCOPE_NAMES       = YES
+INPUT                  = /home/jr/Code/GitHub/Luna
+USE_MDFILE_AS_MAINPAGE = README.md
+EXCLUDE_PATTERNS       = */docs/*
+EXCLUDE_PATTERNS      += */vendor/*
+EXCLUDE_PATTERNS      += */build/*
+RECURSIVE              = YES
+GENERATE_TREEVIEW      = YES
+GENERATE_MAN           = YES
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
+                         doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
+PROJECT_LOGO           = /home/jr/Code/GitHub/Luna/docs/logo.png
+JAVADOC_BLOCK          = YES
+EXTRACT_ALL            = YES
