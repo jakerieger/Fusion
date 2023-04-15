@@ -14,20 +14,20 @@ fill that gap and provide network and system professionals with the best tool fo
 
 ## Getting Started
 
-### 1. [Quickstart](markdown/QUICKSTART.md)
+### [Quickstart](markdown/QUICKSTART.md)
 
 Start here to get Luna installed and running on your system.
 
-### 2. [Examples](markdown/EXAMPLES.md)
+### [Examples](markdown/EXAMPLES.md)
 
 Dive in to example code to get a feel for Luna scripting.
 
-### 3. [Technical Overview](markdown/OVERVIEW.md)
+### [Technical Overview](markdown/OVERVIEW.md)
 
 Check out our Technical Overview if you want to get started working
 with the source code.
 
-### 4. [Documentation](https://opensource.gymate.io/Luna)
+### [Documentation](https://opensource.gymate.io/Luna)
 
 Complete documentation of the source code in this repository.
 
