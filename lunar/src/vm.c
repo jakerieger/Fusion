@@ -3,7 +3,6 @@
 // Licensed under the GNU General Public License v3.0
 
 #include "vm.h"
-#include "io.h"
 #include "repl.h"
 #include <math.h>
 #include <stdio.h>
@@ -83,7 +82,6 @@ int shutdown_vm(VM* vm) {
 }
 
 int run_program(VM* vm, InstructionStream* stream) {
-    //vm->stack_ptr = -1;
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
 
@@ -156,16 +154,12 @@ int run_program(VM* vm, InstructionStream* stream) {
                 switch (value->value_type) {
                     case NVT_NUMBER:
                         push(vm->stack, &value->as.number_value, FT_NUMBER);
-                        printf("%s: %f\n", symbol_name, value->as.number_value);
                         break;
                     case NVT_STRING:
-                        push(vm->stack, &value->as.string_value, FT_STRING);
-                        printf("%s: %s\n", symbol_name, value->as.string_value);
+                        push(vm->stack, value->as.string_value, FT_STRING);
                         break;
                     case NVT_BOOLEAN:
                         push(vm->stack, &value->as.boolean_value, FT_BOOLEAN);
-                        printf("%s: %s\n", symbol_name,
-                               value->as.boolean_value.value == BOOL_TRUE ? "true" : "false");
                         break;
                 }
             } break;
@@ -187,7 +181,7 @@ int run_program(VM* vm, InstructionStream* stream) {
                 switch (*type) {
                     case FT_STRING: {
                         String typed_value = (String) value;
-                        insert(vm->symbol_table, symbol_name, &typed_value, NVT_STRING);
+                        insert(vm->symbol_table, symbol_name, typed_value, NVT_STRING);
                     } break;
                     case FT_NUMBER: {
                         Number typed_value = *(Number*) value;
@@ -219,9 +213,32 @@ int run_program(VM* vm, InstructionStream* stream) {
 
     clock_t end = clock();
     Number runtime = (Number) (end - begin) / CLOCKS_PER_SEC * 1000;
-    //    printf("Output (Number) => ");
-    //    Number output_Number = *(Number*) pop(vm->stack, 0);
-    //    printf("%s%f%s\n", BOLD_CYAN_COLOR, output_Number, RESET_COLOR);
+    FrameType* type = malloc(sizeof(FrameType));
+    *type = FT_NULL;
+    if (type == NULL) {
+        print_error("Failed to allocate memory for output\n");
+        return 1;
+    }
+    void* output = pop(vm->stack, type);
+    printf("Output => ");
+    switch (*type) {
+        case FT_BOOLEAN: {
+            Boolean typed_output = *(Boolean*) output;
+            printf("%s%s%s\n", BOLD_CYAN_COLOR, typed_output.value == BOOL_TRUE ? "true" : "false",
+                   RESET_COLOR);
+        } break;
+        case FT_NUMBER: {
+            Number typed_output = *(Number*) output;
+            printf("%s%f%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
+        } break;
+        case FT_STRING: {
+            String typed_output = (String) output;
+            printf("%s\"%s\"%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
+        } break;
+        case FT_NULL:
+            printf("%s%s%s\n", BOLD_YELLOW_COLOR, "null", RESET_COLOR);
+            break;
+    }
     printf("%s(took: %.3fms)%s\n", YELLOW_COLOR, runtime, RESET_COLOR);
 
     if (vm->config->emit_instruction_set == 1) {

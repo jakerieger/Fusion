@@ -9,7 +9,7 @@
 #define BOOL_FALSE 0x0
 
 typedef double Number;
-typedef const char* String;
+typedef char* String;
 #pragma pack(1)
 typedef struct Boolean {
     unsigned value : 1;
