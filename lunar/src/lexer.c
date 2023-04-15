@@ -99,13 +99,13 @@ Token identifier() {
     identifier_name[len] = '\0';
 
     if (strcmp(identifier_name, "true") == 0) {
-        Boolean* value = malloc(sizeof(Boolean));
+        LunaBoolean* value = malloc(sizeof(LunaBoolean));
         value->value = BOOL_TRUE;
         return make_token(TOKEN_BOOLEAN, value);
     }
 
     if (strcmp(identifier_name, "false") == 0) {
-        Boolean* value = malloc(sizeof(Boolean));
+        LunaBoolean* value = malloc(sizeof(LunaBoolean));
         value->value = BOOL_FALSE;
         return make_token(TOKEN_BOOLEAN, value);
     }

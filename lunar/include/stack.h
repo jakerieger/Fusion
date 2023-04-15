@@ -8,15 +8,13 @@
 #include "types.h"
 #include <stdlib.h>
 
-typedef enum FrameType { FT_BOOLEAN, FT_NUMBER, FT_STRING, FT_NULL } FrameType;
-
 typedef struct {
     union {
-        Boolean boolean_value;
-        Number number_value;
-        String string_value;
+        LunaBoolean boolean_value;
+        LunaNumber number_value;
+        LunaString string_value;
     } value;
-    FrameType type;
+    LunaType type;
 } StackEntry;
 
 typedef struct {
@@ -27,8 +25,8 @@ typedef struct {
 
 Stack* create_stack(int size);
 
-void push(Stack* stack, void* value, FrameType type);
+void push(Stack* stack, void* value, LunaType type);
 
-void* pop(Stack* stack, FrameType* type);
+void* pop(Stack* stack, LunaType* type);
 
 #endif

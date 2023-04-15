@@ -68,18 +68,19 @@ void emit_instruction(InstructionStream* stream, OpCode opcode, void* operand,
 
     switch (operand_type) {
         case OP_TYPE_NUMBER:
-            stream->instructions[stream->count - 1].operand.number_value = *((Number*) operand);
+            stream->instructions[stream->count - 1].operand.number_value = *((LunaNumber*) operand);
             break;
         case OP_TYPE_SYMBOL:
             stream->instructions[stream->count - 1].operand.symbol = (char*) operand;
             break;
         case OP_TYPE_BOOLEAN:
-            stream->instructions[stream->count - 1].operand.boolean_value = *((Boolean*) operand);
+            stream->instructions[stream->count - 1].operand.boolean_value =
+                    *((LunaBoolean*) operand);
             break;
         case OP_TYPE_NULL:
             break;
         case OP_TYPE_STRING:
-            stream->instructions[stream->count - 1].operand.string_value = (String) operand;
+            stream->instructions[stream->count - 1].operand.string_value = (LunaString) operand;
             break;
     }
 }

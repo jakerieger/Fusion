@@ -8,20 +8,14 @@
 #include "types.h"
 #define MAP_SIZE 1024
 
-typedef enum {
-    NVT_NUMBER,
-    NVT_STRING,
-    NVT_BOOLEAN,
-} NodeValueType;
-
 typedef struct Node {
     char* key;
     union {
-        Number number_value;
-        String string_value;
-        Boolean boolean_value;
+        LunaNumber number_value;
+        LunaString string_value;
+        LunaBoolean boolean_value;
     } as;
-    NodeValueType value_type;
+    LunaType value_type;
     struct Node* next;
 } Node;
 
@@ -30,10 +24,9 @@ typedef struct HashMap {
 } HashMap;
 
 unsigned long hash(char* str);
-Node* create_node(char* key, void* value, NodeValueType value_type);
+Node* create_node(char* key, void* value, LunaType value_type);
 void init_hash_map(HashMap* map);
-void insert(HashMap* map, char* key, void* value, NodeValueType value_type);
-//void* get(HashMap* map, char* key);
+void insert(HashMap* map, char* key, void* value, LunaType value_type);
 Node* get_node(HashMap* map, char* key);
 void remove_node(HashMap* map, char* key);
 void free_hash_map(HashMap* map);

@@ -8,12 +8,19 @@
 #define BOOL_TRUE 0x1
 #define BOOL_FALSE 0x0
 
-typedef double Number;
-typedef char* String;
+typedef double LunaNumber;
+typedef char* LunaString;
 #pragma pack(1)
-typedef struct Boolean {
+typedef struct LunaBoolean {
     unsigned value : 1;
-} Boolean;
+} LunaBoolean;
 #pragma pack(0)
+
+typedef enum LunaType {
+    LUNA_TYPE_BOOLEAN,
+    LUNA_TYPE_NUMBER,
+    LUNA_TYPE_STRING,
+    LUNA_TYPE_NULL
+} LunaType;
 
 #endif  //LUNA_TYPES_H

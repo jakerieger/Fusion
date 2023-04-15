@@ -11,8 +11,10 @@
 
 #include <stdint.h>
 
-typedef uint64_t Int64Register;
-typedef uint32_t Int32Register;
+typedef int64_t Int64Register;
+typedef int32_t Int32Register;
+typedef int16_t Int16Register;
+typedef int8_t Int8Register;
 typedef char* StrRegister[256];
 
 #endif  //LUNA_REGISTER_H

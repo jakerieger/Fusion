@@ -19,8 +19,10 @@ typedef struct VM {
     Heap* heap;
     Stack* stack;
     HashMap* symbol_table;
-    Int64Register register_u64;
-    Int32Register register_u32;
+    Int64Register register_i64;
+    Int32Register register_i32;
+    Int16Register register_i16;
+    Int8Register register_i8;
     StrRegister register_str;
     int stack_ptr;
     int heap_ptr;
@@ -32,6 +34,6 @@ int configure_vm(VM* vm);
 int reset_vm(VM* vm);
 int shutdown_vm(VM* vm);
 int run_program(VM* vm, InstructionStream* stream);
-int* generate_byte_code(VM* vm, InstructionStream* stream);
+char** generate_vm_assembly(VM* vm, InstructionStream* stream);
 
 #endif

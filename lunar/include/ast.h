@@ -82,7 +82,7 @@ typedef struct FunctionCallNode {
 } FunctionCallNode;
 
 typedef struct BooleanNode {
-    Boolean value;
+    LunaBoolean value;
 } BooleanNode;
 
 /**

@@ -19,7 +19,7 @@ unsigned long hash(char* str) {
     return hash % MAP_SIZE;
 }
 
-Node* create_node(char* key, void* value, NodeValueType value_type) {
+Node* create_node(char* key, void* value, LunaType value_type) {
     Node* node = (Node*) malloc(sizeof(Node));
     if (node == NULL) {
         print_error("Failed to initialize memory for hash map node\n");
@@ -28,17 +28,20 @@ Node* create_node(char* key, void* value, NodeValueType value_type) {
     node->key = strdup(key);
 
     switch (value_type) {
-        case NVT_BOOLEAN:
-            node->value_type = NVT_BOOLEAN;
-            node->as.boolean_value = *((Boolean*) value);
+        case LUNA_TYPE_BOOLEAN:
+            node->value_type = LUNA_TYPE_BOOLEAN;
+            node->as.boolean_value = *((LunaBoolean*) value);
             break;
-        case NVT_NUMBER:
-            node->value_type = NVT_NUMBER;
-            node->as.number_value = *((Number*) value);
+        case LUNA_TYPE_NUMBER:
+            node->value_type = LUNA_TYPE_NUMBER;
+            node->as.number_value = *((LunaNumber*) value);
             break;
-        case NVT_STRING:
-            node->value_type = NVT_STRING;
-            node->as.string_value = (String) value;
+        case LUNA_TYPE_STRING:
+            node->value_type = LUNA_TYPE_STRING;
+            node->as.string_value = (LunaString) value;
+            break;
+        case LUNA_TYPE_NULL:
+            print_error("Tried to create Node with type 'null'\n");
             break;
     }
 
@@ -50,23 +53,12 @@ void init_hash_map(HashMap* map) {
     for (int i = 0; i < MAP_SIZE; i++) { map->map[i] = NULL; }
 }
 
-void insert(HashMap* map, char* key, void* value, NodeValueType value_type) {
+void insert(HashMap* map, char* key, void* value, LunaType value_type) {
     unsigned long index = hash(key);
     Node* node = create_node(key, value, value_type);
     node->next = map->map[index];
     map->map[index] = node;
 }
-
-// Get the value associated with a given key, or -1 if the key is not in the hash map
-//void* get(HashMap* map, char* key) {
-//    unsigned long index = hash(key);
-//    Node* current = map->map[index];
-//    while (current != NULL) {
-//        if (strcmp(current->key, key) == 0) { return current->value.as_bytes; }
-//        current = current->next;
-//    }
-//    return NULL;
-//}
 
 Node* get_node(HashMap* map, char* key) {
     unsigned long index = hash(key);

@@ -13,7 +13,8 @@ ExprNode* parse_expr(TokenStream* tokens) { return parse_add_expr(tokens); }
 ExprNode* parse_add_expr(TokenStream* tokens) {
     ExprNode* left = parse_mul_expr(tokens);
 
-    while (TOKEN_IS(peek_token(tokens)->type, TOKEN_PLUS)) {
+    while (TOKEN_IS(peek_token(tokens)->type, TOKEN_PLUS) ||
+           TOKEN_IS(peek_token(tokens)->type, TOKEN_MINUS)) {
         Token* op = peek_token(tokens);
         advance_token(tokens);
         ExprNode* right = parse_mul_expr(tokens);
@@ -35,7 +36,9 @@ ExprNode* parse_add_expr(TokenStream* tokens) {
 ExprNode* parse_mul_expr(TokenStream* tokens) {
     ExprNode* left = parse_primary_expr(tokens);
 
-    while (TOKEN_IS(peek_token(tokens)->type, TOKEN_MULTIPLY)) {
+    while (TOKEN_IS(peek_token(tokens)->type, TOKEN_MULTIPLY) ||
+           TOKEN_IS(peek_token(tokens)->type, TOKEN_DIVIDE) ||
+           TOKEN_IS(peek_token(tokens)->type, TOKEN_MODULO)) {
         Token* op = peek_token(tokens);
         advance_token(tokens);
         ExprNode* right = parse_primary_expr(tokens);
@@ -136,7 +139,7 @@ ExprNode* parse_bool_expr(TokenStream* tokens) {
     advance_token(tokens);
 
     BooleanNode* bool_node = malloc(sizeof(BooleanNode));
-    bool_node->value = *(Boolean*) token->val;  // this might go out of scope
+    bool_node->value = *(LunaBoolean*) token->val;
 
     ExprNode* bool_expr_node = malloc(sizeof(ExprNode));
     bool_expr_node->type = EXPR_BOOLEAN;

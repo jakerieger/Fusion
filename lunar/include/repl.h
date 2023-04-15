@@ -5,6 +5,7 @@
 #ifndef LUNA_COLORS_H
 #define LUNA_COLORS_H
 
+#include <stdarg.h>
 #include <stdio.h>
 
 #define RESET_COLOR "\033[0m"
@@ -33,11 +34,7 @@
 #define BG_CYAN_COLOR "\033[46m"
 #define BG_WHITE_COLOR "\033[47m"
 
-void print_colored(const char* restrict color_code, const char* restrict string);
-
-void print_error(const char* restrict msg);
-
-// TODO: Use hashmap implementation to create a { Unicode -> ASCII } map for REPL special characters \
-         -> Update: This probably isn't necessary but I'll leave this here for now
+void print_colored(const char* restrict color_code, const char* restrict format, ...);
+void print_error(const char* restrict format, ...);
 
 #endif

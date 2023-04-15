@@ -22,23 +22,27 @@ Stack* create_stack(int size) {
     return stack;
 }
 
-void push(Stack* stack, void* value, FrameType type) {
+void push(Stack* stack, void* value, LunaType type) {
     if (stack->count < stack->max_size) {
         switch (type) {
-            case FT_BOOLEAN:
+            case LUNA_TYPE_BOOLEAN:
                 stack->entries[stack->count].type = type;
-                stack->entries[stack->count].value.boolean_value = *((Boolean*) value);
+                stack->entries[stack->count].value.boolean_value = *((LunaBoolean*) value);
                 stack->count++;
                 break;
-            case FT_NUMBER:
+            case LUNA_TYPE_NUMBER:
                 stack->entries[stack->count].type = type;
-                stack->entries[stack->count].value.number_value = *((Number*) value);
+                stack->entries[stack->count].value.number_value = *((LunaNumber*) value);
                 stack->count++;
                 break;
-            case FT_STRING:
+            case LUNA_TYPE_STRING:
                 stack->entries[stack->count].type = type;
-                stack->entries[stack->count].value.string_value = (String) value;
+                stack->entries[stack->count].value.string_value = (LunaString) value;
                 stack->count++;
+                break;
+            case LUNA_TYPE_NULL:
+            default:
+                print_error("Tried to push null reference to stack.\n");
                 break;
         }
     } else {
@@ -48,22 +52,23 @@ void push(Stack* stack, void* value, FrameType type) {
     }
 }
 
-void* pop(Stack* stack, FrameType* type) {
+void* pop(Stack* stack, LunaType* type) {
     if (stack->count > 0) {
         stack->count--;
         switch (stack->entries[stack->count].type) {
-            case FT_BOOLEAN:
+            case LUNA_TYPE_BOOLEAN:
                 if (type != NULL) { *type = stack->entries[stack->count].type; }
                 *type = stack->entries[stack->count].type;
                 return &stack->entries[stack->count].value.boolean_value;
-            case FT_NUMBER:
+            case LUNA_TYPE_NUMBER:
                 if (type != NULL) { *type = stack->entries[stack->count].type; }
                 return &stack->entries[stack->count].value.number_value;
-            case FT_STRING:
+            case LUNA_TYPE_STRING:
                 if (type != NULL) { *type = stack->entries[stack->count].type; }
                 return stack->entries[stack->count].value.string_value;
-            case FT_NULL:
-                print_error("Tried to push null reference to stack\n");
+            case LUNA_TYPE_NULL:
+            default:
+                print_error("Tried to pop null reference from stack\n");
                 exit(1);
         }
     } else {

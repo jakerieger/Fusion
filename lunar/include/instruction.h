@@ -18,6 +18,8 @@ typedef enum {
     OP_MULTIPLY,       // Multiply two values and push the result to the stack
     OP_DIVIDE,         // Divide two values and push the result to the stack
     OP_MODULUS,        // Divide two values and push the remainder value to the stack
+    OP_PRINT,          // Pop the top value off the stack and print it to the console
+    OP_INPUT,          // Read the user's input in to memory
     OP_HEAP_ALLOC,     // Allocate memory on the heap
     OP_HEAP_FREE,      // Free memory on the heap
     OP_HALT,           // Halt and exit the program
@@ -44,9 +46,9 @@ typedef enum {
 typedef struct {
     OpCode opcode;
     union {
-        Number number_value;
-        String string_value;
-        Boolean boolean_value;
+        LunaNumber number_value;
+        LunaString string_value;
+        LunaBoolean boolean_value;
         char* symbol;
     } operand;
     OperandType operand_type;
