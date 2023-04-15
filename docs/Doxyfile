@@ -20,7 +20,8 @@ CALLER_GRAPH           = YES
 DISABLE_INDEX          = NO
 FULL_SIDEBAR           = NO
 HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
-                         doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+                         doxygen-awesome-css/doxygen-awesome-sidebar-only.css \
+                         theme.css
 HTML_COLORSTYLE        = LIGHT # required with Doxygen >= 1.9.5
 PROJECT_LOGO           = /home/jr/Code/GitHub/Luna/docs/logo.png
 JAVADOC_BLOCK          = YES

@@ -1,0 +1,13 @@
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        /* define dark-mode variable overrides here if you DON'T use doxygen-awesome-darkmode-toggle.js */
+        --primary-color: #d02d54;
+        --primary-dark-color: #d02d54;
+        --page-background-color: #1a1c29;
+        --page-foreground-color: #a9b1d6;
+        --page-secondary-foreground-color: #565f89;
+        --fragment-background: #15161f;
+        --side-nav-background: #15161f;
+        --separator-color: #2b2f44;
+    }
+}
