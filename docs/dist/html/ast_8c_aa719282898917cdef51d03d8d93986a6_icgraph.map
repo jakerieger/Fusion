@@ -1,5 +1,0 @@
-<map id="parse_add_expr" name="parse_add_expr">
-<area shape="rect" id="node1" title="Parses a stream of tokens in to an ADD or SUB expression." alt="" coords="251,5,376,31"/>
-<area shape="rect" id="node2" href="$ast_8c.html#a3bfad99505945d3e3357d4c35218971b" title="Parses a stream of tokens in to an AST tree and returns the root node." alt="" coords="108,5,203,31"/>
-<area shape="rect" id="node3" href="$main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,5,60,31"/>
-</map>

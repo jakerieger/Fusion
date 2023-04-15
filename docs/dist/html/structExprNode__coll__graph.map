@@ -1,5 +1,0 @@
-<map id="ExprNode" name="ExprNode">
-<area shape="rect" id="node1" title="The base AST node used to represent an expression." alt="" coords="21,93,106,119"/>
-<area shape="rect" id="node2" href="$structBinaryOpNode.html" title="AST node used to represent a binary operation such as addition or subtraction." alt="" coords="5,196,121,221"/>
-<area shape="rect" id="node3" href="$structNumberNode.html" title="AST node used to represent a number value." alt="" coords="9,5,117,31"/>
-</map>

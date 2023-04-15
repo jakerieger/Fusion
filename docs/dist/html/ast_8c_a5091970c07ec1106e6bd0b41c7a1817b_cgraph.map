@@ -1,5 +1,0 @@
-<map id="parse_number_expr" name="parse_number_expr">
-<area shape="rect" id="node1" title="Parses a stream of tokens in to a number expression." alt="" coords="5,31,156,56"/>
-<area shape="rect" id="node2" href="$tokenstream_8c.html#a2129c3a4d43c04f8c300568fddc58e8c" title=" " alt="" coords="204,5,324,31"/>
-<area shape="rect" id="node3" href="$tokenstream_8c.html#a8369174be69cb6a006d09d9eb4c20643" title=" " alt="" coords="215,55,313,80"/>
-</map>
