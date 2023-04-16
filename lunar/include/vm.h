@@ -28,7 +28,6 @@ typedef struct VM {
     Int16Register register_i16;
     Int8Register register_i8;
     StrRegister register_str;
-    int stack_ptr;
     int call_stack_ptr;
     int heap_ptr;
     int instr_ptr;

@@ -52,7 +52,6 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
 
             // Generate instructions to load the value from the temporary location and
             // store it in the symbol table using the symbol name from the left-hand side
-            // TODO: Figure out a way to handle ExprNodes that aren't a direct value reference
             char* symbol_name = ast_root->as.assign_op_node->left.reference_node->name;
             emit_instruction(stream, OP_STORE, symbol_name, OP_TYPE_SYMBOL);
             break;
@@ -77,10 +76,14 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             func->return_type = ast_root->as.function_def_node->return_type;
             func->argc = ast_root->as.function_def_node->argc;
 
+            // Emit instructions to store params
+            for (int i = 0; i < func->argc; i++) {
+                emit_instruction(stream, OP_STORE_PARAM,
+                                 ast_root->as.function_def_node->parameters->symbols[i],
+                                 OP_TYPE_NULL);
+            }
             emit_instruction(stream, OP_NEW_FUNC, func, OP_TYPE_FUNCTION);
-            emit_instruction(stream, OP_STORE, ast_root->as.function_def_node->name,
-                             OP_TYPE_SYMBOL);
-
+            func->entry_point = stream->count + 1;
             generate_instructions(ast_root->as.function_def_node->body, stream);
             emit_instruction(stream, OP_RETURN, NULL, OP_TYPE_NULL);
         } break;

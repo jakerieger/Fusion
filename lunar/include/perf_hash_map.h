@@ -19,7 +19,7 @@ typedef struct FunctionObject {
     char** args_names;
     LunaType return_type;
     int return_address;
-    void (*entry_point)(void);
+    int entry_point;
 } FunctionObject;
 
 typedef struct HashNode {

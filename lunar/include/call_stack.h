@@ -11,9 +11,9 @@
 #include <stdlib.h>
 
 typedef union ArgValue {
-    LunaNumber* num_args_values;    // Pointer to array of numeric arguments
-    LunaBoolean* bool_args_values;  // Pointer to array of boolean arguments
-    LunaString* str_args_values;    // Pointer to array of string arguments
+    LunaNumber num_args_value;    // Pointer to array of numeric arguments
+    LunaBoolean bool_args_value;  // Pointer to array of boolean arguments
+    LunaString str_args_value;    // Pointer to array of string arguments
 } ArgValue;
 
 typedef struct CallFrame {

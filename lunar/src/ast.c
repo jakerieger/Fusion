@@ -81,6 +81,25 @@ ExprNode* parse_identifier_expr(TokenStream* tokens) {
         assign_expr_node->as.assign_op_node = assign_op_node;
 
         return assign_expr_node;
+    } else if (peek_token(tokens)->type == TOKEN_LPAREN) {
+        // This is a function call
+        advance_token(tokens);
+
+        // Parse provided arguments
+        int argc = 0;
+
+        advance_token(tokens);
+
+        FunctionCallNode* func_call_node = malloc(sizeof(FunctionCallNode));
+        func_call_node->argc = argc;
+        func_call_node->name = name;
+        func_call_node->args = NULL;
+
+        ExprNode* func_call_expr_node = malloc(sizeof(ExprNode));
+        func_call_expr_node->type = EXPR_FUNC_CALL;
+        func_call_expr_node->as.function_call_node = func_call_node;
+
+        return func_call_expr_node;
     } else {
         // This is a reference
         ReferenceNode* ref_node = malloc(sizeof(ReferenceNode));

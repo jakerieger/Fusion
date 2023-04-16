@@ -52,7 +52,6 @@ VM* initialize_vm() {
     vm->call_stack = create_call_stack(vm->config->call_stack_size * sizeof(CallFrame));
 
     // Initialize memory ptrs
-    vm->stack_ptr = -1;
     vm->call_stack_ptr = -1;
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
@@ -238,6 +237,45 @@ int run_program(VM* vm, InstructionStream* stream) {
                 }
             } break;
             case OP_CALL: {
+                char* func_name = instruction.operand.symbol;
+                FunctionObject* func_obj = perf_hash_map_get(vm->function_table, func_name);
+                if (func_obj == NULL) {
+                    print_error("Tried to call undefined function: '%s'.\n", func_name);
+                    exit(1);
+                }
+
+                vm->instr_ptr = func_obj->entry_point;
+                continue;
+
+                int argc = func_obj->argc;
+                ArgValue* args = malloc(argc * sizeof(ArgValue));
+                for (int i = 0; i < argc; i++) {
+                    LunaType* type = malloc(sizeof(LunaType));
+                    if (type == NULL) { exit(1); }
+                    *type = LUNA_TYPE_NULL;
+                    void* arg_val = pop(vm->stack, type);
+                    switch (*type) {
+                        case LUNA_TYPE_BOOLEAN: {
+                            LunaBoolean typed_arg_val = *(LunaBoolean*) arg_val;
+                            args[i].bool_args_value = typed_arg_val;
+                        } break;
+                        case LUNA_TYPE_NUMBER: {
+                            LunaNumber typed_arg_val = *(LunaNumber*) arg_val;
+                            args[i].num_args_value = typed_arg_val;
+                        } break;
+                        case LUNA_TYPE_STRING: {
+                            LunaString typed_arg_val = (LunaString) arg_val;
+                            args[i].str_args_value = typed_arg_val;
+                        } break;
+                        case LUNA_TYPE_NULL:
+                            break;
+                    }
+
+                    free(type);
+                }
+
+                push_call_frame(vm->call_stack, vm->instr_ptr, argc);
+
             } break;
             case OP_NEW_FUNC: {
                 char* func_name = strdup(instruction.operand.function_object.name);
