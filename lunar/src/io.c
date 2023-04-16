@@ -37,13 +37,5 @@ char* read_file(const char* path) {
     // Close the file
     fclose(fp);
 
-    // Remove newlines
-    char* p = file_content;
-    while (*p != '\0') {
-        if (*p != '\n') { *file_content++ = *p; }
-        p++;
-    }
-    *file_content = '\0';
-
-    return file_content - file_size;
+    return file_content;
 }

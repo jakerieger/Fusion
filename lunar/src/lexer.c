@@ -110,6 +110,8 @@ Token identifier() {
         return make_token(TOKEN_BOOLEAN, value);
     }
 
+    if (strcmp(identifier_name, "impl") == 0) { return make_token(TOKEN_KEYWORD, "impl"); }
+
     return make_token(TOKEN_IDENTIFIER, identifier_name);
 }
 
@@ -151,6 +153,22 @@ Token scan_token() {
         case '=': {
             advance();
             return make_token(TOKEN_EQUALS, "=");
+        }
+        case ':': {
+            advance();
+            return make_token(TOKEN_COLON, ":");
+        }
+        case ',': {
+            advance();
+            return make_token(TOKEN_COMMA, ",");
+        }
+        case '{': {
+            advance();
+            return make_token(TOKEN_LBRACE, "{");
+        }
+        case '}': {
+            advance();
+            return make_token(TOKEN_RBRACE, "}");
         }
         case '"': {
             advance();

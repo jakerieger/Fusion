@@ -7,6 +7,7 @@
 
 #include "ast.h"
 #include "hash_map.h"
+#include "perf_hash_map.h"
 
 typedef enum {
     OP_PUSH,           // Push a value to the stack
@@ -33,6 +34,17 @@ typedef enum {
     OP_COMPARE_GT,     // Compare the top two stack values for greater than
     OP_COMPARE_LE,     // Compare the top two stack values for less than or equal to
     OP_COMPARE_GE,     // Compare the top two stack values for greater than or equal to
+    OP_CALL,
+    OP_RETURN,
+    OP_LOAD_PARAM,
+    OP_STORE_PARAM,
+    OP_LOAD_LOCAL,
+    OP_STORE_LOCAL,
+    OP_LOAD_GLOBAL,
+    OP_STORE_GLOBAL,
+    OP_NEW_FUNC,
+    OP_LOAD_FUNC,
+    OP_CLOSE_FUNC,
 } OpCode;
 
 typedef enum {
@@ -40,6 +52,7 @@ typedef enum {
     OP_TYPE_NUMBER,
     OP_TYPE_BOOLEAN,
     OP_TYPE_SYMBOL,
+    OP_TYPE_FUNCTION,
     OP_TYPE_NULL,
 } OperandType;
 
@@ -49,6 +62,7 @@ typedef struct {
         LunaNumber number_value;
         LunaString string_value;
         LunaBoolean boolean_value;
+        FunctionObject function_object;
         char* symbol;
     } operand;
     OperandType operand_type;

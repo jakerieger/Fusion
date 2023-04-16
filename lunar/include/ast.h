@@ -23,6 +23,7 @@ typedef struct ExprNode {
         EXPR_REFERENCE,
         EXPR_ASSIGN,
         EXPR_FUNC_CALL,
+        EXPR_FUNC_DEF,
         EXPR_BOOLEAN,
     } type;
     union {
@@ -32,7 +33,9 @@ typedef struct ExprNode {
         struct ReferenceNode* reference_node;
         struct AssignmentOpNode* assign_op_node;
         struct FunctionCallNode* function_call_node;
+        struct FunctionDefNode* function_def_node;
         struct BooleanNode* boolean_node;
+        struct ArgumentListNode* argument_list_node;
     } as;
 } ExprNode;
 
@@ -80,6 +83,18 @@ typedef struct FunctionCallNode {
     int argc;
     ExprNode* args;
 } FunctionCallNode;
+
+typedef struct FunctionDefNode {
+    char* name;
+    int argc;
+    struct ArgumentListNode* parameters;
+    LunaType return_type;
+    ExprNode* body;
+} FunctionDefNode;
+
+typedef struct ArgumentListNode {
+    char** symbols;
+} ArgumentListNode;
 
 typedef struct BooleanNode {
     LunaBoolean value;
@@ -147,5 +162,26 @@ ExprNode* parse_str_expr(TokenStream* tokens);
  * @return Pointer to parsed ExprNode
  */
 ExprNode* parse_bool_expr(TokenStream* tokens);
+
+/**
+ * @brief Parses a stream of tokens in to a keyword expression
+ * @param tokens
+ * @return Pointer to parsed ExprNode
+ */
+ExprNode* parse_keyword_expr(TokenStream* tokens);
+
+/**
+ * @brief Parses a stream of tokens in to a function definition tree
+ * @param tokens
+ * @return Pointer to parsed ExprNode
+ */
+ExprNode* parse_func_def_expr(TokenStream* tokens);
+
+/**
+ * @brief Parses a stream of tokens in to an argument list tree
+ * @param tokens
+ * @return Pointer to parsed ExprNode
+ */
+ExprNode* parse_args_list_expr(TokenStream* tokens);
 
 #endif

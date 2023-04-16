@@ -49,9 +49,11 @@ VM* initialize_vm() {
     // Initialize stack & heap
     vm->heap = create_heap(vm->config->heap_size);
     vm->stack = create_stack((int) vm->config->stack_size);
+    vm->call_stack = create_call_stack(vm->config->call_stack_size * sizeof(CallFrame));
 
     // Initialize memory ptrs
     vm->stack_ptr = -1;
+    vm->call_stack_ptr = -1;
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
 
@@ -62,6 +64,8 @@ VM* initialize_vm() {
         return NULL;
     }
     init_hash_map(vm->symbol_table);
+
+    vm->function_table = perf_hash_map_new();
 
     // Initialize registers
     vm->register_i64 = 0L;
@@ -76,6 +80,7 @@ int configure_vm(VM* vm) { return 0; }
 
 int shutdown_vm(VM* vm) {
     free_hash_map(vm->symbol_table);
+    perf_hash_map_free(vm->function_table);
     free(vm->config);
     free(vm->heap);
     free(vm->stack);
@@ -232,6 +237,13 @@ int run_program(VM* vm, InstructionStream* stream) {
                         break;
                 }
             } break;
+            case OP_CALL: {
+            } break;
+            case OP_NEW_FUNC: {
+                char* func_name = strdup(instruction.operand.function_object.name);
+                perf_hash_map_insert(vm->function_table, func_name,
+                                     (FunctionObject) instruction.operand.function_object);
+            } break;
             case OP_NOOP:
                 continue;
                 //            case OP_HEAP_ALLOC:
@@ -252,9 +264,11 @@ int run_program(VM* vm, InstructionStream* stream) {
     if (vm->config->emit_instruction_set == 1) {
         char** asm_code = generate_vm_assembly(vm, stream);
         printf("\nGenerated VM Assembly:\n");
+
         for (int i = 0; *(asm_code + i); i++) {
             print_colored(BOLD_WHITE_COLOR, "%s\n", *(asm_code + i));
         }
+
         printf("\n");
     }
 

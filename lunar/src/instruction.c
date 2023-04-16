@@ -56,6 +56,34 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             char* symbol_name = ast_root->as.assign_op_node->left.reference_node->name;
             emit_instruction(stream, OP_STORE, symbol_name, OP_TYPE_SYMBOL);
             break;
+        case EXPR_FUNC_CALL:
+            for (int i = 0; i < ast_root->as.function_call_node->argc; i++) {
+                generate_instructions(&ast_root->as.function_call_node->args[i], stream);
+            }
+
+            emit_instruction(stream, OP_CALL, ast_root->as.function_call_node->name,
+                             OP_TYPE_SYMBOL);
+
+            emit_instruction(stream, OP_POP, NULL, OP_TYPE_NULL);
+            for (int i = 0; i < ast_root->as.function_call_node->argc; i++) {
+                emit_instruction(stream, OP_POP, NULL, OP_TYPE_NULL);
+            }
+
+            break;
+        case EXPR_FUNC_DEF: {
+            FunctionObject* func = malloc(sizeof(FunctionObject));
+            func->name = ast_root->as.function_def_node->name;
+            func->args_names = ast_root->as.function_def_node->parameters->symbols;
+            func->return_type = ast_root->as.function_def_node->return_type;
+            func->argc = ast_root->as.function_def_node->argc;
+
+            emit_instruction(stream, OP_NEW_FUNC, func, OP_TYPE_FUNCTION);
+            emit_instruction(stream, OP_STORE, ast_root->as.function_def_node->name,
+                             OP_TYPE_SYMBOL);
+
+            generate_instructions(ast_root->as.function_def_node->body, stream);
+            emit_instruction(stream, OP_RETURN, NULL, OP_TYPE_NULL);
+        } break;
     }
 }
 
@@ -76,6 +104,10 @@ void emit_instruction(InstructionStream* stream, OpCode opcode, void* operand,
         case OP_TYPE_BOOLEAN:
             stream->instructions[stream->count - 1].operand.boolean_value =
                     *((LunaBoolean*) operand);
+            break;
+        case OP_TYPE_FUNCTION:
+            stream->instructions[stream->count - 1].operand.function_object =
+                    *((FunctionObject*) operand);
             break;
         case OP_TYPE_NULL:
             break;

@@ -3,7 +3,9 @@
 // Licensed under the GNU General Public License v3.0
 
 #include "ast.h"
+#include "repl.h"
 #include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define TOKEN_IS(__token, __type) __token == __type
@@ -103,6 +105,8 @@ ExprNode* parse_primary_expr(TokenStream* tokens) {
         return parse_bool_expr(tokens);
     } else if (token->type == TOKEN_IDENTIFIER) {
         return parse_identifier_expr(tokens);
+    } else if (token->type == TOKEN_KEYWORD) {
+        return parse_keyword_expr(tokens);
     }
 }
 
@@ -147,3 +151,108 @@ ExprNode* parse_bool_expr(TokenStream* tokens) {
 
     return bool_expr_node;
 }
+
+ExprNode* parse_keyword_expr(TokenStream* tokens) {
+    Token* token = peek_token(tokens);
+    advance_token(tokens);
+
+    if (strcmp((char*) token->val, "impl") == 0) { return parse_func_def_expr(tokens); }
+
+    return NULL;
+}
+
+ExprNode* parse_func_def_expr(TokenStream* tokens) {
+    if (peek_token(tokens)->type != TOKEN_IDENTIFIER) {
+        print_error("Function definition missing name.\n");
+        exit(1);
+    }
+
+    char* func_name = (char*) peek_token(tokens)->val;
+    advance_token(tokens);
+
+    if (peek_token(tokens)->type != TOKEN_LPAREN) {
+        print_error("Function definition missing argument list opening paren '('\n");
+        exit(1);
+    }
+
+    ArgumentListNode* args_list_node = malloc(sizeof(ArgumentListNode));
+    if (args_list_node == NULL) {
+        print_error("Failed to allocate memory for argument list node\n");
+        exit(1);
+    }
+
+    args_list_node->symbols = malloc(sizeof(char*));
+    if (args_list_node->symbols == NULL) {
+        print_error("Failed to allocate memory for argument list array\n");
+        exit(1);
+    }
+    int argc = 0;
+
+    advance_token(tokens);
+    while (peek_token(tokens)->type != TOKEN_RPAREN) {
+        if (peek_token(tokens)->type != TOKEN_IDENTIFIER &&
+            peek_token(tokens)->type != TOKEN_COMMA) {
+            print_error("Invalid argument name: '%s'\n", (char*) peek_token(tokens)->val);
+            exit(1);
+        } else {
+            if (peek_token(tokens)->type == TOKEN_COMMA &&
+                peek_next_token(tokens)->type == TOKEN_RPAREN) {
+                print_error("Argument list not terminated (trailing ',')\n");
+                exit(1);
+            }
+
+            if (peek_token(tokens)->type == TOKEN_COMMA) {
+                advance_token(tokens);
+                continue;
+            }
+
+            if (peek_token(tokens)->type == TOKEN_IDENTIFIER) {
+                argc++;
+                args_list_node->symbols = realloc(args_list_node->symbols, sizeof(char*) * argc);
+                if (args_list_node->symbols == NULL) {
+                    print_error("Failed to re-allocate memory for argument list array\n");
+                    exit(1);
+                }
+
+                args_list_node->symbols[argc - 1] = (char*) peek_token(tokens)->val;
+                advance_token(tokens);
+            }
+        }
+    }
+    advance_token(tokens);
+    if (peek_token(tokens)->type != TOKEN_LBRACE) {
+        print_error("Function body opening brace '{' missing\n");
+        exit(1);
+    }
+    advance_token(tokens);
+    ExprNode* body = parse_expr(tokens);
+
+    if (peek_token(tokens)->type != TOKEN_RBRACE) {
+        print_error("Function body closing brace '}' missing\n");
+        exit(1);
+    }
+    advance_token(tokens);
+
+    FunctionDefNode* func_def_node = malloc(sizeof(FunctionDefNode));
+    if (func_def_node == NULL) {
+        print_error("Failed to allocate memory for FunctionDefNode\n");
+        exit(1);
+    }
+    func_def_node->name = strdup(func_name);
+    func_def_node->argc = argc;
+    func_def_node->body = body;
+    func_def_node->parameters = args_list_node;
+    func_def_node->return_type = LUNA_TYPE_NULL;
+
+    ExprNode* func_def_expr_node = malloc(sizeof(ExprNode));
+    if (func_def_expr_node == NULL) {
+        print_error("Failed to allocate memory for ExprNode\n");
+        exit(1);
+    }
+    func_def_expr_node->type = EXPR_FUNC_DEF;
+    func_def_expr_node->as.function_def_node = func_def_node;
+
+    return func_def_expr_node;
+}
+
+ExprNode* parse_args_list_expr(TokenStream* tokens) { return NULL; }

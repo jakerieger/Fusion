@@ -44,7 +44,7 @@ add_executable(lunar
     src/vm.c
     src/vmconfig.c
     vendor/inih/ini.c
-    )
+    include/perf_hash_map.h src/perf_hash_map.c)
 
 add_custom_command(TARGET lunar POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
