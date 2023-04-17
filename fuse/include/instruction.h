@@ -6,8 +6,7 @@
 #define FUSION_INSTRUCTION_H
 
 #include "ast.h"
-#include "hash_map.h"
-#include "perf_hash_map.h"
+#include "hashmap.h"
 
 typedef enum {
     OP_PUSH,           // Push a value to the stack

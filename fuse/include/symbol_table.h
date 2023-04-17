@@ -5,12 +5,10 @@
 #ifndef FUSION_SYMBOL_TABLE_H
 #define FUSION_SYMBOL_TABLE_H
 
-typedef struct SymbolTable {
-
-} SymbolTable;
+#include "hashmap.h"
 
 typedef struct SymbolTableStack {
-    SymbolTable** tables;
+    HashMap** tables;
     int count;
 } SymbolTableStack;
 

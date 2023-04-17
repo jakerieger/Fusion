@@ -29,12 +29,12 @@ static const char* get_platform_config_dir() {
     if (strcmp(PLATFORM, "windows") == 0) {
         char* homedir = getenv("USERPROFILE");
         char fullpath[256];
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", homedir, ".FUSION");
+        snprintf(fullpath, sizeof(fullpath), "%s/%s", homedir, ".fusion");
         return strdup(fullpath);
     } else if (strcmp(PLATFORM, "linux_unknown") == 0 || strcmp(PLATFORM, "darwin") == 0) {
         char* homedir = getenv("HOME");
         char fullpath[256];
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", homedir, ".FUSION");
+        snprintf(fullpath, sizeof(fullpath), "%s/%s", homedir, ".fusion");
         return strdup(fullpath);
     } else {
         return "./";

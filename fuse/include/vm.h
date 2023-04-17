@@ -6,13 +6,13 @@
 #define FUSION_VM_H
 
 #include "call_stack.h"
-#include "hash_map.h"
+#include "hashmap.h"
 #include "heap.h"
 #include "instruction.h"
 #include "lexer.h"
-#include "perf_hash_map.h"
 #include "register.h"
 #include "stack.h"
+#include "symbol_table.h"
 #include "vmconfig.h"
 #include <stdlib.h>
 
@@ -21,8 +21,8 @@ typedef struct VM {
     Heap* heap;
     Stack* stack;
     CallStack* call_stack;
-    HashMap* symbol_table;
-    PHashMap* function_table;
+    SymbolTableStack* symbol_table_stack;
+    HashMap* function_table;
     Int64Register register_i64;
     Int32Register register_i32;
     Int16Register register_i16;

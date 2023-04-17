@@ -10,11 +10,9 @@
 
 typedef double FusionNumber;
 typedef char* FusionString;
-#pragma pack(1)
 typedef struct FusionBoolean {
     unsigned value : 1;
 } FusionBoolean;
-#pragma pack(0)
 
 typedef enum FusionType {
     FUSION_TYPE_BOOLEAN,
@@ -22,5 +20,13 @@ typedef enum FusionType {
     FUSION_TYPE_STRING,
     FUSION_TYPE_NULL
 } FusionType;
+
+typedef struct FunctionObject {
+    char* name;
+    char** args_names;
+    int argc;
+    FusionType return_type;
+    int entry_point;
+} FunctionObject;
 
 #endif  //FUSION_TYPES_H

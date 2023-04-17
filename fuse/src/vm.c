@@ -3,7 +3,10 @@
 // Licensed under the GNU General Public License v3.0
 
 #include "vm.h"
+#include "error.h"
+#include "instruction.h"
 #include "repl.h"
+#include "symbol_table.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -56,15 +59,11 @@ VM* initialize_vm() {
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
 
-    // Initialize symbol table
-    vm->symbol_table = malloc(sizeof(HashMap));
-    if (vm->symbol_table == NULL) {
-        print_error("Failed to allocate memory for symbol table.\n");
-        return NULL;
-    }
-    init_hash_map(vm->symbol_table);
+    // Initialize symbol table stack
+    vm->symbol_table_stack = malloc(sizeof(SymbolTableStack));
+    CHECK_MEM(vm->symbol_table_stack)
 
-    vm->function_table = perf_hash_map_new();
+    vm->function_table = hashmap_create(vm->function_table);
 
     // Initialize registers
     vm->register_i64 = 0L;
@@ -78,8 +77,11 @@ VM* initialize_vm() {
 int configure_vm(VM* vm) { return 0; }
 
 int shutdown_vm(VM* vm) {
-    free_hash_map(vm->symbol_table);
-    perf_hash_map_free(vm->function_table);
+    for (int i = 0; i < vm->symbol_table_stack->count; i++) {
+        hashmap_destroy(vm->symbol_table_stack->tables[i]);
+    }
+
+    hashmap_destroy(vm->function_table);
     free(vm->config);
     free(vm->heap);
     free(vm->stack);
@@ -113,6 +115,8 @@ int run_program(VM* vm, InstructionStream* stream) {
                         push(vm->stack, instruction.operand.symbol, FUSION_TYPE_STRING);
                         break;
                     case OP_TYPE_NULL:
+                    case OP_TYPE_FUNCTION:
+                    default:
                         break;
                 }
                 break;
@@ -151,27 +155,27 @@ int run_program(VM* vm, InstructionStream* stream) {
             } break;
             case OP_LOAD: {
                 char* symbol_name = instruction.operand.symbol;
-                Node* value = get_node(vm->symbol_table, symbol_name);
-                if (value == NULL) {
-                    printf("[!] Runtime error: Unknown identifier '%s'\n", symbol_name);
-                    break;
-                }
+                // Node* value = get_node(vm->symbol_table, symbol_name);
+                // if (value == NULL) {
+                //     printf("[!] Runtime error: Unknown identifier '%s'\n", symbol_name);
+                //     break;
+                // }
 
-                switch (value->value_type) {
-                    case FUSION_TYPE_NUMBER:
-                        push(vm->stack, &value->as.number_value, FUSION_TYPE_NUMBER);
-                        break;
-                    case FUSION_TYPE_STRING:
-                        push(vm->stack, value->as.string_value, FUSION_TYPE_STRING);
-                        break;
-                    case FUSION_TYPE_BOOLEAN:
-                        push(vm->stack, &value->as.boolean_value, FUSION_TYPE_BOOLEAN);
-                        break;
-                    case FUSION_TYPE_NULL:
-                    default:
-                        print_error("Symbol '%s' is type 'null'\n", symbol_name);
-                        break;
-                }
+                // switch (value->value_type) {
+                //     case FUSION_TYPE_NUMBER:
+                //         push(vm->stack, &value->as.number_value, FUSION_TYPE_NUMBER);
+                //         break;
+                //     case FUSION_TYPE_STRING:
+                //         push(vm->stack, value->as.string_value, FUSION_TYPE_STRING);
+                //         break;
+                //     case FUSION_TYPE_BOOLEAN:
+                //         push(vm->stack, &value->as.boolean_value, FUSION_TYPE_BOOLEAN);
+                //         break;
+                //     case FUSION_TYPE_NULL:
+                //     default:
+                //         print_error("Symbol '%s' is type 'null'\n", symbol_name);
+                //         break;
+                // }
             } break;
             case OP_STORE: {
                 char* symbol_name = instruction.operand.symbol;
@@ -191,15 +195,15 @@ int run_program(VM* vm, InstructionStream* stream) {
                 switch (*type) {
                     case FUSION_TYPE_STRING: {
                         FusionString typed_value = (FusionString) value;
-                        insert(vm->symbol_table, symbol_name, typed_value, FUSION_TYPE_STRING);
+                        // insert(vm->symbol_table, symbol_name, typed_value, FUSION_TYPE_STRING);
                     } break;
                     case FUSION_TYPE_NUMBER: {
                         FusionNumber typed_value = *(FusionNumber*) value;
-                        insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_NUMBER);
+                        // insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_NUMBER);
                     } break;
                     case FUSION_TYPE_BOOLEAN: {
                         FusionBoolean typed_value = *(FusionBoolean*) value;
-                        insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_BOOLEAN);
+                        // insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_BOOLEAN);
                     } break;
                     default:
                         print_error("Attempted to store a null reference.\n");
@@ -237,50 +241,50 @@ int run_program(VM* vm, InstructionStream* stream) {
                 }
             } break;
             case OP_CALL: {
-                char* func_name = instruction.operand.symbol;
-                FunctionObject* func_obj = perf_hash_map_get(vm->function_table, func_name);
-                if (func_obj == NULL) {
-                    print_error("Tried to call undefined function: '%s'.\n", func_name);
-                    exit(1);
-                }
+                // char* func_name = instruction.operand.symbol;
+                // FunctionObject* func_obj = perf_hash_map_get(vm->function_table, func_name);
+                // if (func_obj == NULL) {
+                //     print_error("Tried to call undefined function: '%s'.\n", func_name);
+                //     exit(1);
+                // }
 
-                vm->instr_ptr = func_obj->entry_point;
-                continue;
+                // vm->instr_ptr = func_obj->entry_point;
+                // continue;
 
-                int argc = func_obj->argc;
-                ArgValue* args = malloc(argc * sizeof(ArgValue));
-                for (int i = 0; i < argc; i++) {
-                    FusionType* type = malloc(sizeof(FusionType));
-                    if (type == NULL) { exit(1); }
-                    *type = FUSION_TYPE_NULL;
-                    void* arg_val = pop(vm->stack, type);
-                    switch (*type) {
-                        case FUSION_TYPE_BOOLEAN: {
-                            FusionBoolean typed_arg_val = *(FusionBoolean*) arg_val;
-                            args[i].bool_args_value = typed_arg_val;
-                        } break;
-                        case FUSION_TYPE_NUMBER: {
-                            FusionNumber typed_arg_val = *(FusionNumber*) arg_val;
-                            args[i].num_args_value = typed_arg_val;
-                        } break;
-                        case FUSION_TYPE_STRING: {
-                            FusionString typed_arg_val = (FusionString) arg_val;
-                            args[i].str_args_value = typed_arg_val;
-                        } break;
-                        case FUSION_TYPE_NULL:
-                            break;
-                    }
+                // int argc = func_obj->argc;
+                // ArgValue* args = malloc(argc * sizeof(ArgValue));
+                // for (int i = 0; i < argc; i++) {
+                //     FusionType* type = malloc(sizeof(FusionType));
+                //     if (type == NULL) { exit(1); }
+                //     *type = FUSION_TYPE_NULL;
+                //     void* arg_val = pop(vm->stack, type);
+                //     switch (*type) {
+                //         case FUSION_TYPE_BOOLEAN: {
+                //             FusionBoolean typed_arg_val = *(FusionBoolean*) arg_val;
+                //             args[i].bool_args_value = typed_arg_val;
+                //         } break;
+                //         case FUSION_TYPE_NUMBER: {
+                //             FusionNumber typed_arg_val = *(FusionNumber*) arg_val;
+                //             args[i].num_args_value = typed_arg_val;
+                //         } break;
+                //         case FUSION_TYPE_STRING: {
+                //             FusionString typed_arg_val = (FusionString) arg_val;
+                //             args[i].str_args_value = typed_arg_val;
+                //         } break;
+                //         case FUSION_TYPE_NULL:
+                //             break;
+                //     }
 
-                    free(type);
-                }
+                //     free(type);
+                // }
 
-                push_call_frame(vm->call_stack, vm->instr_ptr, argc);
+                // push_call_frame(vm->call_stack, vm->instr_ptr, argc);
 
             } break;
             case OP_NEW_FUNC: {
-                char* func_name = strdup(instruction.operand.function_object.name);
-                perf_hash_map_insert(vm->function_table, func_name,
-                                     (FunctionObject) instruction.operand.function_object);
+                // char* func_name = strdup(instruction.operand.function_object.name);
+                // perf_hash_map_insert(vm->function_table, func_name,
+                //                      (FunctionObject) instruction.operand.function_object);
             } break;
             case OP_NOOP:
                 continue;
