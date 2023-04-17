@@ -2,7 +2,7 @@
 
 ## Math
 
-LunaR supports executing literal math expressions directly and will print the output automatically if one is detected.
+Fuse (the Fusion REPL) supports executing literal math expressions directly and will print the output automatically if one is detected.
 
 ``` shell
 ››› 2 + 2
@@ -27,7 +27,7 @@ Output ⇛ 0
 
 ## Variables
 
-To create a variable in Luna, you simply give it a name and assign it a value:
+To create a variable in Fusion, you simply give it a name and assign it a value:
 
 ```shell
 ››› x = 2

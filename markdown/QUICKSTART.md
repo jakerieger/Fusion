@@ -2,7 +2,7 @@
 
 ## Install from source
 
-The Luna interpreter and repl are written in C so you'll need to setup a development environment for C if you don't
+The Fusion interpreter and repl are written in C so you'll need to setup a development environment for C if you don't
 already have one.
 
 ### Prerequisites
@@ -14,8 +14,8 @@ already have one.
 ### 1. Clone the repository
 
 ```shell
-$ git clone https://github.com/GymateSoftware/Luna
-$ cd ./Luna
+$ git clone https://github.com/GymateSoftware/Fusion
+$ cd ./Fusion
 ```
 
 ### 2. Configure and run CMake
@@ -38,21 +38,21 @@ $ make
 
 > NOTE: This method is **not** functional at the moment, please install from source [above](#install-from-source).
 
-You can install the Luna toolchain directly by downloading and executing the following script:
+You can install the Fusion toolchain directly by downloading and executing the following script:
 
 ```shell
-$ wget https://github.com/GymateSoftware/Luna/releases/latest/install.sh | sh install.sh
+$ wget https://github.com/GymateSoftware/Fusion/releases/latest/install.sh | sh install.sh
 ```
 
-## Run the Luna REPL (LunaR)
+## Run the Fusion REPL (Fuse)
 
-Run the Luna REPL by executing the `lunar` command.
+Run the Fusion REPL by executing the `FUSIONr` command.
 
 ```shell
-$ luna
+$ FUSION
 ┏─────────────────────┓
 │     ░L░u░n░a░R░     │
-│    The Luna Repl    │
+│    The Fusion Repl    │
 ┗─────────────────────┛
 
 Version  : 0.0.1 (dev)
@@ -63,14 +63,14 @@ Platform : linux_unknown
 ›››
 ```
 
-You can also pass a script file to the `lunar` command to execute that script file.
+You can also pass a script file to the `FUSIONr` command to execute that script file.
 
 ```shell
-$ lunar <script>
+$ FUSIONr <script>
 ```
 
 ## Next steps
 
-Head on over to [Examples](EXAMPLES.md) to see Luna in action or
-our [Official Documentation](https://opensource.gymate.io/Luna) to dive deep in to the inner
-workings of Luna.
+Head on over to [Examples](EXAMPLES.md) to see Fusion in action or
+our [Official Documentation](https://opensource.gymate.io/Fusion) to dive deep in to the inner
+workings of Fusion.

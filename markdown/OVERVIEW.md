@@ -1,6 +1,6 @@
 # Technical Overview
 
-This page serves as a quick introduction to the source of Luna and its internal mechanics.
+This page serves as a quick introduction to the source of Fusion and its internal mechanics.
 It assumes some familiarity with the concepts of compiler design and low-level programming.
 
 ### Table of Contents
@@ -10,7 +10,7 @@ It assumes some familiarity with the concepts of compiler design and low-level p
     - [Files](#files)
     - [Recommended Environment](#recommended-environment)
 - [Components](#components)
-    - [The Luna Virtual Machine](#the-luna-virtual-machine)
+    - [The Fusion Virtual Machine](#the-FUSION-virtual-machine)
     - [Lexer](#lexer)
     - [Parser](#parser)
     - [Abstract Syntax Tree](#abstract-syntax-tree)
@@ -44,7 +44,7 @@ It assumes some familiarity with the concepts of compiler design and low-level p
 
 ## Components
 
-### The Luna Virtual Machine
+### The Fusion Virtual Machine
 
 ### Lexer
 
