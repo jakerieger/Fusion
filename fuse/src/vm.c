@@ -9,6 +9,7 @@
 #include "repl.h"
 #include "stack.h"
 #include "symbol_table.h"
+#include "types.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -268,50 +269,32 @@ int run_program(VM* vm, InstructionStream* stream) {
                 }
             } break;
             case OP_CALL: {
-                // char* func_name = instruction.operand.symbol;
-                // FunctionObject* func_obj = perf_hash_map_get(vm->function_table, func_name);
-                // if (func_obj == NULL) {
-                //     print_error("Tried to call undefined function: '%s'.\n", func_name);
-                //     exit(1);
-                // }
+                char* func_name = instruction.operand.symbol;
 
-                // vm->instr_ptr = func_obj->entry_point;
-                // continue;
+                Entry* func_entry = hashmap_get(vm->function_table, func_name);
+                if (func_entry == NULL) {
+                    print_error("Tried to call undefined function: '%s'.", func_name);
+                    exit(1);
+                }
 
-                // int argc = func_obj->argc;
-                // ArgValue* args = malloc(argc * sizeof(ArgValue));
-                // for (int i = 0; i < argc; i++) {
-                //     FusionType* type = malloc(sizeof(FusionType));
-                //     if (type == NULL) { exit(1); }
-                //     *type = FUSION_TYPE_NULL;
-                //     void* arg_val = pop(vm->stack, type);
-                //     switch (*type) {
-                //         case FUSION_TYPE_BOOLEAN: {
-                //             FusionBoolean typed_arg_val = *(FusionBoolean*) arg_val;
-                //             args[i].bool_args_value = typed_arg_val;
-                //         } break;
-                //         case FUSION_TYPE_NUMBER: {
-                //             FusionNumber typed_arg_val = *(FusionNumber*) arg_val;
-                //             args[i].num_args_value = typed_arg_val;
-                //         } break;
-                //         case FUSION_TYPE_STRING: {
-                //             FusionString typed_arg_val = (FusionString) arg_val;
-                //             args[i].str_args_value = typed_arg_val;
-                //         } break;
-                //         case FUSION_TYPE_NULL:
-                //             break;
-                //     }
+                if (func_entry->value_type != MAP_TYPE_FUNCTION) {
+                    print_error("Tried to call undefined reference '%s' as function.");
+                    vm->instr_ptr = stream->count - 1;
+                }
 
-                //     free(type);
-                // }
+                FunctionObject* func_obj = &func_entry->as.function_value;
 
-                // push_call_frame(vm->call_stack, vm->instr_ptr, argc);
+                int return_addr = vm->instr_ptr;
+                run_program(vm, func_obj->body);
+                vm->instr_ptr = return_addr;
+                continue;
 
             } break;
             case OP_NEW_FUNC: {
-                // char* func_name = strdup(instruction.operand.function_object.name);
-                // perf_hash_map_insert(vm->function_table, func_name,
-                //                      (FunctionObject) instruction.operand.function_object);
+                char* name = strdup(instruction.operand.function_object.name);
+                hashmap_put(vm->function_table, name,
+                            (FunctionObject*) &instruction.operand.function_object,
+                            MAP_TYPE_FUNCTION);
             } break;
             case OP_NOOP:
                 continue;

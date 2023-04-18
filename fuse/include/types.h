@@ -26,7 +26,7 @@ typedef struct FunctionObject {
     char** args_names;
     int argc;
     FusionType return_type;
-    int entry_point;
+    struct InstructionStream* body;
 } FunctionObject;
 
 #endif  //FUSION_TYPES_H
