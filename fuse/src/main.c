@@ -4,6 +4,7 @@
 
 #include "ast.h"
 #include "fuse.h"
+#include "instruction.h"
 #include "io.h"
 #include "lexer.h"
 #include "platform.h"
@@ -102,7 +103,8 @@ int run_repl(VM* vm, char* input) {
 
     generate_instructions(ast, program);
     // We attach the halt instruction to the end of our program to ensure it terminates
-    emit_instruction(program, OP_HALT, NULL, OP_TYPE_NULL);
+    OperandContext ctx = {.type = OP_TYPE_NULL, .scope = SCOPE_GLOBAL};
+    emit_instruction(program, OP_HALT, NULL, ctx);
 
     /*******************************************************************************
      * We pass our VM instance and instruction set to be executed

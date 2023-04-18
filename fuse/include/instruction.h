@@ -55,6 +55,16 @@ typedef enum {
     OP_TYPE_NULL,
 } OperandType;
 
+typedef enum {
+    SCOPE_LOCAL,
+    SCOPE_GLOBAL,
+} Scope;
+
+typedef struct OperandContext {
+    OperandType type;
+    Scope scope;
+} OperandContext;
+
 typedef struct {
     OpCode opcode;
     union {
@@ -64,7 +74,7 @@ typedef struct {
         FunctionObject function_object;
         char* symbol;
     } operand;
-    OperandType operand_type;
+    OperandContext operand_context;
 } Instruction;
 
 typedef struct InstructionStream {
@@ -74,6 +84,6 @@ typedef struct InstructionStream {
 
 void generate_instructions(ExprNode* ast_root, InstructionStream* stream);
 void emit_instruction(InstructionStream* stream, OpCode opcode, void* operand,
-                      OperandType operand_type);
+                      OperandContext operand_context);
 
 #endif
