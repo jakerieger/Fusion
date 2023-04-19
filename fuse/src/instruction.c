@@ -10,6 +10,8 @@
 #include <string.h>
 
 void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
+    if (ast_root == NULL) { return; }
+
     switch (ast_root->type) {
         case EXPR_ADD: {
             generate_instructions(ast_root->as.binary_op_node->left, stream);
@@ -91,6 +93,14 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             }
         } break;
         case EXPR_FUNC_DEF: {
+            if (strcmp(ast_root->as.function_def_node->name, "print") == 0 ||
+                strcmp(ast_root->as.function_def_node->name, "input") == 0 ||
+                strcmp(ast_root->as.function_def_node->name, "exit") == 0) {
+                print_error("Tried to redefine built in function '%s()'",
+                            ast_root->as.function_def_node->name);
+                return;
+            }
+
             OperandContext context = {.type = OP_TYPE_NULL, .scope = SCOPE_GLOBAL};
             FunctionObject* func = malloc(sizeof(FunctionObject));
             func->body = malloc(sizeof(InstructionStream));
@@ -102,16 +112,19 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             func->argc = ast_root->as.function_def_node->argc;
 
             // Emit instructions to store params
-            for (int i = 0; i < func->argc; i++) {
-                emit_instruction(stream, OP_STORE_PARAM,
-                                 ast_root->as.function_def_node->parameters->symbols[i], context);
-            }
+            // TODO: Implement a call stack
+            // for (int i = 0; i < func->argc; i++) {
+            //     emit_instruction(stream, OP_STORE_PARAM,
+            //                      ast_root->as.function_def_node->parameters->symbols[i], context);
+            // }
             context.type = OP_TYPE_FUNCTION;
             emit_instruction(stream, OP_NEW_FUNC, func, context);
             generate_instructions(ast_root->as.function_def_node->body, func->body);
             context.type = OP_TYPE_NULL;
             emit_instruction(func->body, OP_HALT, NULL, context);
             emit_instruction(stream, OP_RETURN, NULL, context);
+        } break;
+        case EXPR_BLOCK: {
         } break;
     }
 }

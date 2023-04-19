@@ -8,24 +8,41 @@
 #include "token_stream.h"
 #include "types.h"
 
+enum {
+    EXPR_ADD,
+    EXPR_SUBTRACT,
+    EXPR_MULTIPLY,
+    EXPR_DIVIDE,
+    EXPR_MODULUS,
+    EXPR_NUMBER,
+    EXPR_STRING,
+    EXPR_REFERENCE,
+    EXPR_ASSIGN,
+    EXPR_FUNC_CALL,
+    EXPR_FUNC_DEF,
+    EXPR_BOOLEAN,
+    EXPR_BLOCK,
+};
+
 /**
  * @brief The base AST node used to represent an expression.
  */
 typedef struct ExprNode {
-    enum {
-        EXPR_ADD,
-        EXPR_SUBTRACT,
-        EXPR_MULTIPLY,
-        EXPR_DIVIDE,
-        EXPR_MODULUS,
-        EXPR_NUMBER,
-        EXPR_STRING,
-        EXPR_REFERENCE,
-        EXPR_ASSIGN,
-        EXPR_FUNC_CALL,
-        EXPR_FUNC_DEF,
-        EXPR_BOOLEAN,
-    } type;
+    // enum {
+    //     EXPR_ADD,
+    //     EXPR_SUBTRACT,
+    //     EXPR_MULTIPLY,
+    //     EXPR_DIVIDE,
+    //     EXPR_MODULUS,
+    //     EXPR_NUMBER,
+    //     EXPR_STRING,
+    //     EXPR_REFERENCE,
+    //     EXPR_ASSIGN,
+    //     EXPR_FUNC_CALL,
+    //     EXPR_FUNC_DEF,
+    //     EXPR_BOOLEAN,
+    // } type;
+    unsigned int type:4;
     union {
         struct BinaryOpNode* binary_op_node;
         struct NumberNode* number_node;
@@ -36,6 +53,7 @@ typedef struct ExprNode {
         struct FunctionDefNode* function_def_node;
         struct BooleanNode* boolean_node;
         struct ArgumentListNode* argument_list_node;
+        struct BlockNode* block_node;
     } as;
 } ExprNode;
 
@@ -99,6 +117,11 @@ typedef struct ArgumentListNode {
 typedef struct BooleanNode {
     FusionBoolean value;
 } BooleanNode;
+
+typedef struct BlockNode {
+    ExprNode** expressions;
+    int expr_count;
+} BlockNode;
 
 /**
  * @brief Parses a stream of tokens in to an AST tree and returns the root node

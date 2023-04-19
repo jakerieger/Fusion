@@ -175,6 +175,10 @@ Token scan_token() {
             advance();
             return make_token(TOKEN_RBRACE, "}");
         }
+        case ';': {
+            advance();
+            return make_token(TOKEN_SEMICOLON, ";");
+        }
         case '"': {
             advance();
             char str[MAX_STR_LEN] = {'\0'};

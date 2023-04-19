@@ -3,3 +3,4 @@ project(Fusion C)
 
 add_subdirectory(fuse)
 add_subdirectory(fuse-test)
+add_subdirectory(infuse)
