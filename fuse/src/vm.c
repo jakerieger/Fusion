@@ -274,15 +274,47 @@ int run_program(VM* vm, InstructionStream* stream) {
                 Entry* func_entry = hashmap_get(vm->function_table, func_name);
                 if (func_entry == NULL) {
                     print_error("Tried to call undefined function: '%s'.", func_name);
-                    exit(1);
+                    vm->instr_ptr = stream->count - 1;
+                    continue;
                 }
 
                 if (func_entry->value_type != MAP_TYPE_FUNCTION) {
-                    print_error("Tried to call undefined reference '%s' as function.");
+                    print_error("Tried to call undefined reference '%s' as function.", func_name);
                     vm->instr_ptr = stream->count - 1;
+                    continue;
                 }
 
+                // This method works fine when all the arguments are position-independent
+                // TODO: Refactor this to retrieve values in the order they're provided to
+                //       the function call
                 FunctionObject* func_obj = &func_entry->as.function_value;
+                for (int i = func_obj->argc - 1; i <= 0; i--) {
+                    char* symbol = func_obj->args_names[i];
+                    FusionType* type = malloc(sizeof(FusionType));
+                    *type = FUSION_TYPE_NULL;
+                    void* value = pop(vm->stack, type);
+                    switch (*type) {
+                        case FUSION_TYPE_BOOLEAN: {
+                            FusionBoolean typed_output = *(FusionBoolean*) value;
+                            hashmap_put(vm->symbol_table_stack->tables[0], symbol, &typed_output,
+                                        MAP_TYPE_BOOLEAN);
+                        } break;
+                        case FUSION_TYPE_NUMBER: {
+                            FusionNumber typed_output = *(FusionNumber*) value;
+                            hashmap_put(vm->symbol_table_stack->tables[0], symbol, &typed_output,
+                                        MAP_TYPE_NUMBER);
+                        } break;
+                        case FUSION_TYPE_STRING: {
+                            FusionString typed_output = (FusionString) value;
+                            hashmap_put(vm->symbol_table_stack->tables[0], symbol, typed_output,
+                                        MAP_TYPE_STRING);
+                        } break;
+                        case FUSION_TYPE_NULL:
+                            break;
+                    }
+
+                    free(type);
+                }
 
                 int return_addr = vm->instr_ptr;
                 run_program(vm, func_obj->body);
@@ -311,33 +343,6 @@ int run_program(VM* vm, InstructionStream* stream) {
 
     clock_t end = clock();
     double runtime = (double) (end - begin) / CLOCKS_PER_SEC * 1000;
-
-    FusionType* type = malloc(sizeof(FusionType));
-    *type = FUSION_TYPE_NULL;
-    if (type == NULL) {
-        print_error("Failed to allocate memory for output\n");
-        vm->instr_ptr = stream->count - 1;  // Jump to end of program and terminate
-    }
-    void* output = pop(vm->stack, type);
-    printf("=> ");
-    switch (*type) {
-        case FUSION_TYPE_BOOLEAN: {
-            FusionBoolean typed_output = *(FusionBoolean*) output;
-            printf("%s%s%s\n", BOLD_CYAN_COLOR, typed_output.value == BOOL_TRUE ? "true" : "false",
-                   RESET_COLOR);
-        } break;
-        case FUSION_TYPE_NUMBER: {
-            FusionNumber typed_output = *(FusionNumber*) output;
-            printf("%s%f%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
-        } break;
-        case FUSION_TYPE_STRING: {
-            FusionString typed_output = (FusionString) output;
-            printf("%s\"%s\"%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
-        } break;
-        case FUSION_TYPE_NULL:
-            printf("%s%s%s\n", BOLD_YELLOW_COLOR, "null", RESET_COLOR);
-            break;
-    }
 
     printf("%s(took: %.3fms)%s\n", YELLOW_COLOR, runtime, RESET_COLOR);
 
@@ -545,6 +550,32 @@ char** generate_vm_assembly(VM* vm, InstructionStream* stream) {
                 size++;
                 asm_array = realloc(asm_array, sizeof(char*) * (size + 1));
             } break;
+            case OP_CALL: {
+                char* name = instruction.operand.symbol;
+                char push_str[24];
+                sprintf(push_str, "__%s()", name);
+                asm_array[size] = malloc(strlen(push_str) + 1);
+                strcpy(asm_array[size], push_str);
+                size++;
+                asm_array = realloc(asm_array, sizeof(char*) * (size + 1));
+            }
+            case OP_RETURN:
+            case OP_LOAD_PARAM:
+            case OP_STORE_PARAM:
+            case OP_LOAD_LOCAL:
+            case OP_STORE_LOCAL:
+            case OP_LOAD_GLOBAL:
+            case OP_STORE_GLOBAL:
+            case OP_NEW_FUNC: {
+                char push_str[] = "DEF      $FP";
+                asm_array[size] = malloc(strlen(push_str) + 1);
+                strcpy(asm_array[size], push_str);
+                size++;
+                asm_array = realloc(asm_array, sizeof(char*) * (size + 1));
+            } break;
+            case OP_LOAD_FUNC:
+            case OP_CLOSE_FUNC:
+                break;
         }
 
         idx++;

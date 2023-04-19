@@ -81,7 +81,7 @@ typedef struct ReferenceNode {
 typedef struct FunctionCallNode {
     char* name;
     int argc;
-    ExprNode* args;
+    ExprNode** args;
 } FunctionCallNode;
 
 typedef struct FunctionDefNode {

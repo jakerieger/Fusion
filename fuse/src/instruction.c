@@ -7,6 +7,7 @@
 #include "repl.h"
 #include <malloc.h>
 #include <stdlib.h>
+#include <string.h>
 
 void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
     switch (ast_root->type) {
@@ -69,7 +70,14 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
         case EXPR_FUNC_CALL: {
             OperandContext context = {.type = OP_TYPE_SYMBOL, .scope = SCOPE_GLOBAL};
             for (int i = 0; i < ast_root->as.function_call_node->argc; i++) {
-                generate_instructions(&ast_root->as.function_call_node->args[i], stream);
+                generate_instructions(ast_root->as.function_call_node->args[i], stream);
+            }
+
+            // Check for built-in function calls first
+            if (strcmp(ast_root->as.function_call_node->name, "print") == 0) {
+                context.type = OP_TYPE_NULL;
+                emit_instruction(stream, OP_PRINT, NULL, context);
+                break;
             }
 
             emit_instruction(stream, OP_CALL, ast_root->as.function_call_node->name, context);

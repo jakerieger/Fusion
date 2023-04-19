@@ -83,7 +83,6 @@ static void rehash(HashMap* map) {
                 case MAP_TYPE_NULL:
                 default: {
                     print_error("Tried to assign symbol 'null' value\n");
-                    exit(1);
                 }
             }
             free(old_entries[i].key);

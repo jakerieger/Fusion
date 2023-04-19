@@ -3,7 +3,10 @@
 // Licensed under the GNU General Public License v3.0
 
 #include "ast.h"
+#include "error.h"
+#include "lexer.h"
 #include "repl.h"
+#include "token_stream.h"
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
@@ -85,15 +88,33 @@ ExprNode* parse_identifier_expr(TokenStream* tokens) {
         // This is a function call
         advance_token(tokens);
 
-        // Parse provided arguments
+        // TODO: Parse provided arguments
         int argc = 0;
+        ExprNode** args = malloc(sizeof(ExprNode*) + 1);
+        CHECK_MEM(args)
+        while (peek_token(tokens)->type != TOKEN_RPAREN) {
+            if (peek_token(tokens)->type == TOKEN_COMMA &&
+                peek_next_token(tokens)->type == TOKEN_RPAREN) {
+                print_error("Unterminated argument list in function call (trailing ',').");
+                exit(1);
+            }
+
+            if (peek_token(tokens)->type == TOKEN_COMMA) {
+                advance_token(tokens);
+                continue;
+            }
+
+            args = realloc(args, sizeof(ExprNode*) * (argc + 1));
+            args[argc] = parse_expr(tokens);
+            argc++;
+        }
 
         advance_token(tokens);
 
         FunctionCallNode* func_call_node = malloc(sizeof(FunctionCallNode));
         func_call_node->argc = argc;
         func_call_node->name = name;
-        func_call_node->args = NULL;
+        func_call_node->args = args;
 
         ExprNode* func_call_expr_node = malloc(sizeof(ExprNode));
         func_call_expr_node->type = EXPR_FUNC_CALL;
