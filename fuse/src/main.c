@@ -109,7 +109,7 @@ int run_repl(VM* vm, char* input) {
     /*******************************************************************************
      * We pass our VM instance and instruction set to be executed
      ******************************************************************************/
-    run_program(vm, program);
+    run_program(vm, program, "main");
 
     /*******************************************************************************
      * Finally, we clean up and prepare our VM to receive a new program
@@ -193,7 +193,6 @@ int main(int argc, char** argv) {
             //            print_colored(YELLOW_COLOR, "Editing VM config...\n");
             break;
         } else {
-            printf("[%s]\n\n", input);
             run_repl(vm, input);
         }
     }

@@ -91,11 +91,11 @@ ExprNode* parse_identifier_expr(TokenStream* tokens) {
         // TODO: Parse provided arguments
         int argc = 0;
         ExprNode** args = malloc(sizeof(ExprNode*) + 1);
-        CHECK_MEM(args)
+        CHECK_MALLOC(args, "args");
         while (peek_token(tokens)->type != TOKEN_RPAREN) {
             if (peek_token(tokens)->type == TOKEN_COMMA &&
                 peek_next_token(tokens)->type == TOKEN_RPAREN) {
-                print_error("Unterminated argument list in function call (trailing ',').");
+                print_error("Unterminated argument list in function call (trailing ',')");
                 exit(1);
             }
 
@@ -148,6 +148,8 @@ ExprNode* parse_primary_expr(TokenStream* tokens) {
     } else if (token->type == TOKEN_KEYWORD) {
         return parse_keyword_expr(tokens);
     }
+
+    return NULL;
 }
 
 ExprNode* parse_number_expr(TokenStream* tokens) {

@@ -64,7 +64,7 @@ VM* initialize_vm() {
 
     // Initialize symbol table stack
     vm->symbol_table_stack = malloc(sizeof(SymbolTableStack));
-    CHECK_MEM(vm->symbol_table_stack)
+    CHECK_MALLOC(vm->symbol_table_stack, "vm->symbol_table_stack")
     HashMap* global_symbol_table = hashmap_create();
     vm->symbol_table_stack->tables = malloc(sizeof(HashMap));
     vm->symbol_table_stack->tables[0] = global_symbol_table;
@@ -96,7 +96,9 @@ int shutdown_vm(VM* vm) {
     return 0;
 }
 
-int run_program(VM* vm, InstructionStream* stream) {
+int run_program(VM* vm, InstructionStream* stream, const char* proc_name) {
+#define SAFE_TERMINATE vm->instr_ptr = stream->count - 1;
+
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
 
@@ -169,7 +171,8 @@ int run_program(VM* vm, InstructionStream* stream) {
                         symbol_name);
                 if (entry == NULL) {
                     print_error("Undefined variable '%s'", symbol_name);
-                    vm->instr_ptr = stream->count - 1;  // Jump to end of program and terminate
+                    SAFE_TERMINATE
+                    continue;
                 }
 
                 switch (entry->value_type) {
@@ -202,7 +205,8 @@ int run_program(VM* vm, InstructionStream* stream) {
 
                 if (type == NULL) {
                     print_error("FusionType pointer value NULL\n");
-                    vm->instr_ptr = stream->count - 1;  // Jump to end of program and terminate
+                    SAFE_TERMINATE
+                    continue;
                 }
 
                 switch (*type) {
@@ -213,7 +217,6 @@ int run_program(VM* vm, InstructionStream* stream) {
                                             : vm->symbol_table_stack
                                                       ->tables[vm->symbol_table_stack->count - 1],
                                     symbol_name, typed_value, MAP_TYPE_STRING);
-                        // insert(vm->symbol_table, symbol_name, typed_value, FUSION_TYPE_STRING);
                     } break;
                     case FUSION_TYPE_NUMBER: {
                         FusionNumber typed_value = *(FusionNumber*) value;
@@ -222,7 +225,6 @@ int run_program(VM* vm, InstructionStream* stream) {
                                             : vm->symbol_table_stack
                                                       ->tables[vm->symbol_table_stack->count - 1],
                                     symbol_name, &typed_value, MAP_TYPE_NUMBER);
-                        // insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_NUMBER);
                     } break;
                     case FUSION_TYPE_BOOLEAN: {
                         FusionBoolean typed_value = *(FusionBoolean*) value;
@@ -231,11 +233,11 @@ int run_program(VM* vm, InstructionStream* stream) {
                                             : vm->symbol_table_stack
                                                       ->tables[vm->symbol_table_stack->count - 1],
                                     symbol_name, &typed_value, MAP_TYPE_BOOLEAN);
-                        // insert(vm->symbol_table, symbol_name, &typed_value, FUSION_TYPE_BOOLEAN);
                     } break;
                     default:
                         print_error("Attempted to store a null reference.\n");
-                        vm->instr_ptr = stream->count - 1;  // Jump to end of program and terminate
+                        SAFE_TERMINATE
+                        continue;
                 }
 
                 free(type);
@@ -245,25 +247,29 @@ int run_program(VM* vm, InstructionStream* stream) {
                 *type = FUSION_TYPE_NULL;
                 if (type == NULL) {
                     print_error("Failed to allocate memory for output\n");
-                    vm->instr_ptr = stream->count - 1;  // Jump to end of program and terminate
+                    SAFE_TERMINATE
+                    continue;
                 }
                 void* output = pop(vm->stack, type);
-                printf("=> ");
                 switch (*type) {
                     case FUSION_TYPE_BOOLEAN: {
+                        printf("\n(Boolean) => ");
                         FusionBoolean typed_output = *(FusionBoolean*) output;
                         printf("%s%s%s\n", BOLD_CYAN_COLOR,
                                typed_output.value == BOOL_TRUE ? "true" : "false", RESET_COLOR);
                     } break;
                     case FUSION_TYPE_NUMBER: {
+                        printf("\n(Number) => ");
                         FusionNumber typed_output = *(FusionNumber*) output;
                         printf("%s%f%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
                     } break;
                     case FUSION_TYPE_STRING: {
+                        printf("\n(String) => ");
                         FusionString typed_output = (FusionString) output;
-                        printf("%s\"%s\"%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
+                        printf("%s%s%s\n", BOLD_CYAN_COLOR, typed_output, RESET_COLOR);
                     } break;
                     case FUSION_TYPE_NULL:
+                        printf("\n(Undefined) => ");
                         printf("%s%s%s\n", BOLD_YELLOW_COLOR, "null", RESET_COLOR);
                         break;
                 }
@@ -274,13 +280,13 @@ int run_program(VM* vm, InstructionStream* stream) {
                 Entry* func_entry = hashmap_get(vm->function_table, func_name);
                 if (func_entry == NULL) {
                     print_error("Tried to call undefined function: '%s'.", func_name);
-                    vm->instr_ptr = stream->count - 1;
+                    SAFE_TERMINATE
                     continue;
                 }
 
                 if (func_entry->value_type != MAP_TYPE_FUNCTION) {
                     print_error("Tried to call undefined reference '%s' as function.", func_name);
-                    vm->instr_ptr = stream->count - 1;
+                    SAFE_TERMINATE
                     continue;
                 }
 
@@ -288,7 +294,7 @@ int run_program(VM* vm, InstructionStream* stream) {
                 // TODO: Refactor this to retrieve values in the order they're provided to
                 //       the function call
                 FunctionObject* func_obj = &func_entry->as.function_value;
-                for (int i = func_obj->argc - 1; i <= 0; i--) {
+                for (int i = func_obj->argc - 1; i >= 0; i--) {
                     char* symbol = func_obj->args_names[i];
                     FusionType* type = malloc(sizeof(FusionType));
                     *type = FUSION_TYPE_NULL;
@@ -317,7 +323,7 @@ int run_program(VM* vm, InstructionStream* stream) {
                 }
 
                 int return_addr = vm->instr_ptr;
-                run_program(vm, func_obj->body);
+                run_program(vm, func_obj->body, func_name);
                 vm->instr_ptr = return_addr;
                 continue;
 
@@ -344,10 +350,10 @@ int run_program(VM* vm, InstructionStream* stream) {
     clock_t end = clock();
     double runtime = (double) (end - begin) / CLOCKS_PER_SEC * 1000;
 
-    printf("%s(took: %.3fms)%s\n", YELLOW_COLOR, runtime, RESET_COLOR);
+    printf("%s(%s) Finished in %.3fms.%s\n", WHITE_COLOR, proc_name, runtime, RESET_COLOR);
 
     if (vm->config->emit_instruction_set == 1) {
-        char** asm_code = generate_vm_assembly(vm, stream);
+        char** asm_code = generate_vm_assembly(vm, stream, proc_name);
         printf("\nGenerated VM Assembly:\n");
 
         for (int i = 0; *(asm_code + i); i++) {
@@ -358,12 +364,14 @@ int run_program(VM* vm, InstructionStream* stream) {
     }
 
     pop(vm->stack, NULL);
+
+#undef SAFE_TERMINATE
     return 0;
 }
 
 int reset_vm(VM* vm) { return 0; }
 
-char** generate_vm_assembly(VM* vm, InstructionStream* stream) {
+char** generate_vm_assembly(VM* vm, InstructionStream* stream, const char* proc_name) {
     // Re-initialize VM ptrs
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;

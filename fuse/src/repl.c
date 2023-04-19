@@ -17,8 +17,8 @@ void print_colored(const char* restrict color_code, const char* restrict format,
 void print_error(const char* restrict format, ...) {
     va_list args;
     va_start(args, format);
-    printf("%sError: %s", BOLD_RED_COLOR, BOLD_WHITE_COLOR);
-    vfprintf(stderr, format, args);
-    printf("%s", RESET_COLOR);
+    printf("%s(error) %s", BOLD_RED_COLOR, RED_COLOR);
+    vfprintf(stdout, format, args);
+    printf("%s\n", RESET_COLOR);
     va_end(args);
 }

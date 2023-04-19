@@ -110,7 +110,12 @@ Token identifier() {
         return make_token(TOKEN_BOOLEAN, value);
     }
 
+    // Lex keywords
     if (strcmp(identifier_name, "impl") == 0) { return make_token(TOKEN_KEYWORD, "impl"); }
+    if (strcmp(identifier_name, "if") == 0) { return make_token(TOKEN_KEYWORD, "if"); }
+    if (strcmp(identifier_name, "else") == 0) { return make_token(TOKEN_KEYWORD, "else"); }
+    if (strcmp(identifier_name, "while") == 0) { return make_token(TOKEN_KEYWORD, "while"); }
+    if (strcmp(identifier_name, "for") == 0) { return make_token(TOKEN_KEYWORD, "for"); }
 
     return make_token(TOKEN_IDENTIFIER, identifier_name);
 }

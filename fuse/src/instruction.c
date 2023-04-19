@@ -62,7 +62,7 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             // Generate instructions to evaluate the right-hand side expression
             generate_instructions(ast_root->as.assign_op_node->right, stream);
 
-            // Generate instructions to load the value from the temporary location and
+            // Generate instructions to load the value from the stack and
             // store it in the symbol table using the symbol name from the left-hand side
             char* symbol_name = ast_root->as.assign_op_node->left.reference_node->name;
             emit_instruction(stream, OP_STORE, symbol_name, context);
@@ -77,22 +77,24 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             if (strcmp(ast_root->as.function_call_node->name, "print") == 0) {
                 context.type = OP_TYPE_NULL;
                 emit_instruction(stream, OP_PRINT, NULL, context);
-                break;
-            }
+            } else if (strcmp(ast_root->as.function_call_node->name, "exit") == 0) {
+                context.type = OP_TYPE_NULL;
+                emit_instruction(stream, OP_HALT, NULL, context);
+            } else {
+                emit_instruction(stream, OP_CALL, ast_root->as.function_call_node->name, context);
 
-            emit_instruction(stream, OP_CALL, ast_root->as.function_call_node->name, context);
-
-            context.type = OP_TYPE_NULL;
-            emit_instruction(stream, OP_POP, NULL, context);
-            for (int i = 0; i < ast_root->as.function_call_node->argc; i++) {
+                context.type = OP_TYPE_NULL;
                 emit_instruction(stream, OP_POP, NULL, context);
+                for (int i = 0; i < ast_root->as.function_call_node->argc; i++) {
+                    emit_instruction(stream, OP_POP, NULL, context);
+                }
             }
         } break;
         case EXPR_FUNC_DEF: {
             OperandContext context = {.type = OP_TYPE_NULL, .scope = SCOPE_GLOBAL};
             FunctionObject* func = malloc(sizeof(FunctionObject));
             func->body = malloc(sizeof(InstructionStream));
-            CHECK_MEM(func->body);
+            CHECK_MALLOC(func->body, "func->body");
             func->body->count = 0;
             func->name = ast_root->as.function_def_node->name;
             func->args_names = ast_root->as.function_def_node->parameters->symbols;
