@@ -9,6 +9,7 @@
 #include "types.h"
 
 enum {
+    EXPR_EMPTY,
     EXPR_ADD,
     EXPR_SUBTRACT,
     EXPR_MULTIPLY,
@@ -24,25 +25,16 @@ enum {
     EXPR_BLOCK,
 };
 
+typedef struct AST {
+    struct ExprNode** nodes;
+    int count;
+} AST;
+
 /**
  * @brief The base AST node used to represent an expression.
  */
 typedef struct ExprNode {
-    // enum {
-    //     EXPR_ADD,
-    //     EXPR_SUBTRACT,
-    //     EXPR_MULTIPLY,
-    //     EXPR_DIVIDE,
-    //     EXPR_MODULUS,
-    //     EXPR_NUMBER,
-    //     EXPR_STRING,
-    //     EXPR_REFERENCE,
-    //     EXPR_ASSIGN,
-    //     EXPR_FUNC_CALL,
-    //     EXPR_FUNC_DEF,
-    //     EXPR_BOOLEAN,
-    // } type;
-    unsigned int type:4;
+    unsigned int type:4; //< packs Expr enum values in to 4 bits
     union {
         struct BinaryOpNode* binary_op_node;
         struct NumberNode* number_node;
@@ -55,6 +47,7 @@ typedef struct ExprNode {
         struct ArgumentListNode* argument_list_node;
         struct BlockNode* block_node;
     } as;
+    struct ExprNode* next;
 } ExprNode;
 
 /**
@@ -107,7 +100,7 @@ typedef struct FunctionDefNode {
     int argc;
     struct ArgumentListNode* parameters;
     FusionType return_type;
-    ExprNode* body;
+    struct BlockNode* body;
 } FunctionDefNode;
 
 typedef struct ArgumentListNode {
@@ -206,5 +199,7 @@ ExprNode* parse_func_def_expr(TokenStream* tokens);
  * @return Pointer to parsed ExprNode
  */
 ExprNode* parse_args_list_expr(TokenStream* tokens);
+
+ExprNode* parse_ast(TokenStream* tokens);
 
 #endif

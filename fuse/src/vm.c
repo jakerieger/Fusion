@@ -102,8 +102,6 @@ int run_program(VM* vm, InstructionStream* stream, const char* proc_name) {
     vm->heap_ptr = 0;
     vm->instr_ptr = 0;
 
-    clock_t begin = clock();
-
     while (stream->instructions[vm->instr_ptr].opcode != OP_HALT) {
         Instruction instruction = stream->instructions[vm->instr_ptr];
         vm->instr_ptr++;
@@ -346,11 +344,6 @@ int run_program(VM* vm, InstructionStream* stream, const char* proc_name) {
                 break;
         }
     }
-
-    clock_t end = clock();
-    double runtime = (double) (end - begin) / CLOCKS_PER_SEC * 1000;
-
-    printf("%s(%s) Finished in %.3fms.%s\n", WHITE_COLOR, proc_name, runtime, RESET_COLOR);
 
     if (vm->config->emit_instruction_set == 1) {
         char** asm_code = generate_vm_assembly(vm, stream, proc_name);

@@ -102,10 +102,13 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             }
 
             OperandContext context = {.type = OP_TYPE_NULL, .scope = SCOPE_GLOBAL};
-            FunctionObject* func = malloc(sizeof(FunctionObject));
-            func->body = malloc(sizeof(InstructionStream));
-            CHECK_MALLOC(func->body, "func->body");
+            FunctionObject* func = (FunctionObject*) malloc(sizeof(FunctionObject));
+            if (func == NULL) { return; }
+            func->body = (InstructionStream*) malloc(sizeof(InstructionStream));
+            if (func->body == NULL) { return; }
             func->body->count = 0;
+            func->body->instructions = (Instruction*) malloc(sizeof(Instruction));
+            if (func->body->instructions == NULL) { return; }
             func->name = ast_root->as.function_def_node->name;
             func->args_names = ast_root->as.function_def_node->parameters->symbols;
             func->return_type = ast_root->as.function_def_node->return_type;
@@ -119,10 +122,15 @@ void generate_instructions(ExprNode* ast_root, InstructionStream* stream) {
             // }
             context.type = OP_TYPE_FUNCTION;
             emit_instruction(stream, OP_NEW_FUNC, func, context);
-            generate_instructions(ast_root->as.function_def_node->body, func->body);
+
+            for (int i = 0; i < ast_root->as.function_def_node->body->expr_count; i++) {
+                generate_instructions(ast_root->as.function_def_node->body->expressions[i],
+                                      func->body);
+            }
+
             context.type = OP_TYPE_NULL;
             emit_instruction(func->body, OP_HALT, NULL, context);
-            emit_instruction(stream, OP_RETURN, NULL, context);
+            // emit_instruction(stream, OP_RETURN, NULL, context);
         } break;
         case EXPR_BLOCK: {
         } break;

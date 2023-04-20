@@ -13,6 +13,21 @@
 
 #define TOKEN_IS(__token, __type) __token == __type
 
+ExprNode* parse_ast(TokenStream* tokens) {
+    ExprNode* root_node = NULL;
+    ExprNode** current = &root_node;
+
+    while (peek_token(tokens)->type != TOKEN_EOF) {
+        ExprNode* node = parse_expr(tokens);
+        *current = malloc(sizeof(ExprNode));
+        memcpy(*current, node, sizeof(ExprNode));
+        (*current)->next = NULL;
+        current = &((*current)->next);
+    }
+
+    return root_node;
+}
+
 ExprNode* parse_expr(TokenStream* tokens) { return parse_add_expr(tokens); }
 
 ExprNode* parse_add_expr(TokenStream* tokens) {
@@ -199,6 +214,7 @@ ExprNode* parse_keyword_expr(TokenStream* tokens) {
     advance_token(tokens);
 
     if (strcmp((char*) token->val, "impl") == 0) { return parse_func_def_expr(tokens); }
+    if (strcmp((char*) token->val, "return") == 0) { return parse_func_def_expr(tokens); }
 
     return NULL;
 }
@@ -267,7 +283,25 @@ ExprNode* parse_func_def_expr(TokenStream* tokens) {
         return NULL;
     }
     advance_token(tokens);
-    ExprNode* body = parse_expr(tokens);
+    // ExprNode* body = parse_expr(tokens);
+    BlockNode* block_node = malloc(sizeof(BlockNode));
+    block_node->expr_count = 0;
+    block_node->expressions = malloc(sizeof(ExprNode*) + 1);
+
+    while (peek_token(tokens)->type != TOKEN_RBRACE) {
+        ExprNode* node = parse_expr(tokens);
+        CHECK_NULL_FATAL(node, "node")
+        block_node->expressions =
+                realloc(block_node->expressions, sizeof(ExprNode*) * ++block_node->expr_count);
+        block_node->expressions[block_node->expr_count - 1] = node;
+
+        // if (peek_token(tokens)->type == TOKEN_SEMICOLON) { advance_token(tokens); }
+
+        if (peek_token(tokens)->type == TOKEN_EOF) {
+            print_error("Function body closing brace '}' missing\n");
+            return NULL;
+        }
+    }
 
     if (peek_token(tokens)->type != TOKEN_RBRACE) {
         print_error("Function body closing brace '}' missing\n");
@@ -282,7 +316,7 @@ ExprNode* parse_func_def_expr(TokenStream* tokens) {
     }
     func_def_node->name = strdup(func_name);
     func_def_node->argc = argc;
-    func_def_node->body = body;
+    func_def_node->body = block_node;
     func_def_node->parameters = args_list_node;
     func_def_node->return_type = FUSION_TYPE_NULL;
 

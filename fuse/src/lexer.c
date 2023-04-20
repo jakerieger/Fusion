@@ -116,6 +116,7 @@ Token identifier() {
     if (strcmp(identifier_name, "else") == 0) { return make_token(TOKEN_KEYWORD, "else"); }
     if (strcmp(identifier_name, "while") == 0) { return make_token(TOKEN_KEYWORD, "while"); }
     if (strcmp(identifier_name, "for") == 0) { return make_token(TOKEN_KEYWORD, "for"); }
+    if (strcmp(identifier_name, "return") == 0) { return make_token(TOKEN_KEYWORD, "return"); }
 
     return make_token(TOKEN_IDENTIFIER, identifier_name);
 }

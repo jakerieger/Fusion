@@ -3,6 +3,7 @@
 // Licensed under the GNU General Public License v3.0
 
 #include "ast.h"
+#include "error.h"
 #include "fuse.h"
 #include "instruction.h"
 #include "io.h"
@@ -13,6 +14,7 @@
 #include "vm.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 int run_repl(VM* vm, char* input);
 
@@ -76,6 +78,10 @@ int run_repl(VM* vm, char* input) {
         token = scan_token();
     }
 
+    ++count;
+    tokens->tokens = realloc(tokens->tokens, count * sizeof(Token));
+    CHECK_REALLOC(tokens->tokens, "tokens->tokens")
+    tokens->tokens[count - 1] = make_token(TOKEN_EOF, NULL);
     tokens->count = count;
 
     /*******************************************************************************
@@ -83,7 +89,7 @@ int run_repl(VM* vm, char* input) {
      * parse our tokens in to a tree of expression nodes that we can later pass off
      * to our instruction parser to generate our machine instructions.
      ******************************************************************************/
-    ExprNode* ast = parse_expr(tokens);
+    ExprNode* ast = parse_ast(tokens);
 
     /*******************************************************************************
      * Now we parse our AST in to an InstructionStream we can give to our VM
@@ -101,7 +107,13 @@ int run_repl(VM* vm, char* input) {
         exit(1);
     }
 
-    generate_instructions(ast, program);
+    // Traverse AST and generate instructions
+    ExprNode* current = ast;
+    while (current != NULL) {
+        generate_instructions(current, program);
+        current = current->next;
+    }
+
     // We attach the halt instruction to the end of our program to ensure it terminates
     OperandContext ctx = {.type = OP_TYPE_NULL, .scope = SCOPE_GLOBAL};
     emit_instruction(program, OP_HALT, NULL, ctx);
@@ -109,7 +121,12 @@ int run_repl(VM* vm, char* input) {
     /*******************************************************************************
      * We pass our VM instance and instruction set to be executed
      ******************************************************************************/
+    clock_t begin = clock();
     run_program(vm, program, "main");
+    clock_t end = clock();
+    double runtime = (double) (end - begin) / CLOCKS_PER_SEC * 1000;
+
+    printf("%sFinished in %.3fms.%s\n", WHITE_COLOR, runtime, RESET_COLOR);
 
     /*******************************************************************************
      * Finally, we clean up and prepare our VM to receive a new program
