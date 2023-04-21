@@ -2,6 +2,8 @@
 
 ## Introduction
 
+<img src="https://gymatemedia.s3.us-east-2.amazonaws.com/images/FusionExample01.png" width="500" align="right">
+
 **Fusion** is a dynamically-typed, interpreted server scripting language designed to be as simple as possible to use while
 providing
 all the common tools a network professional would need.
