@@ -6,7 +6,8 @@
 
 **Fusion** is a dynamically-typed, interpreted server scripting language designed to be as simple as possible to use while
 providing
-all the common tools a network professional would need.
+all the common tools a network professional would need. This means first-class support for networking protocols such as HTTP/S,
+WebSocket and Raw TCP/UDP, as well as an easy interface in to system commands.
 
 ## Why?
 
