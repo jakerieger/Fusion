@@ -1,4 +1,4 @@
-// Copyright © 2023 Gymate, Inc.
+// Copyright © 2023 Jake Rieger.
 //
 // Licensed under the GNU General Public License v3.0
 
