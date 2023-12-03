@@ -44,6 +44,6 @@ add_executable(fuse
     src/vm.c
     src/vmconfig.c
     vendor/inih/ini.c
-)
+        std/crypto/djb2.h)
 
 target_link_libraries(fuse m)

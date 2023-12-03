@@ -2,7 +2,6 @@
 #include "repl.h"
 #include "types.h"
 #include <string.h>
-#include <strings.h>
 
 static unsigned int hash_string(const char* str) {
     unsigned int hash = 5381;

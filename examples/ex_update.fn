@@ -1,0 +1,39 @@
+import net, crypto from std
+
+# Verify the checksum of the downloaded file
+############################################
+impl verify_latest(file) {
+    checksum = request(
+        "http://example.com/releases/latest/checksum",
+        "GET",
+        "JSON"
+    )
+    return sha512(checksum.sha512, file)
+}
+
+# Download the latest file to our downloads folder
+##################################################
+impl get_latest() {
+    file = download(
+        "http://example.com/releases/latest",
+        "~/Downloads/latest.tar.gz"
+    )
+
+    if (!verify_latest(file)) {
+        return false
+    }
+
+    result = exec("tar", ["-xf", "~/Downloads/latest.tar.gz"])
+    
+    if (result != 0) {
+        return false
+    }
+
+    return true
+}
+
+latest = get_latest()
+
+if (latest) {
+    print("Got latest!")
+}

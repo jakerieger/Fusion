@@ -5,7 +5,6 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(EXTERNAL_SOURCES
-    ${PROJECT_SOURCE_DIR}/../fuse/src/hashmap.c
     ${PROJECT_SOURCE_DIR}/../fuse/src/repl.c
 )
 
@@ -15,3 +14,4 @@ include_directories(
 )
 
 add_executable(fuse-test main.c ${EXTERNAL_SOURCES})
+target_link_libraries(fuse-test m)

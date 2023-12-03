@@ -1,0 +1,7 @@
+ impl add(x, y) {
+    c = x + y
+    return c
+}
+
+result = add(100, 20)
+print(result)

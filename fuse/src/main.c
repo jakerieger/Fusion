@@ -7,10 +7,7 @@
 #include "fuse.h"
 #include "instruction.h"
 #include "io.h"
-#include "lexer.h"
 #include "platform.h"
-#include "repl.h"
-#include "token_stream.h"
 #include "vm.h"
 #include <stdio.h>
 #include <string.h>
